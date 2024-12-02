@@ -11,67 +11,54 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
     }
   };
 
-  const inputClassName = "w-full p-3 bg-white/70 border-2 border-gray-200 \
-    text-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent \
+  const inputClassName = "w-full p-3 bg-blue-50/50 border-2 border-blue-100 \
+    text-blue-900 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent \
     transition-all duration-300 text-sm sm:text-base font-medium \
-    placeholder:text-gray-400";
-
-  const inputWrapper = (input) => (
-    <div className="relative">
-      {input}
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-indigo-500/5 pointer-events-none" />
-    </div>
-  );
+    placeholder:text-blue-300 relative z-10";
 
   if (cipher === 'affine') {
     return (
       <div className="grid grid-cols-2 gap-4">
-        {inputWrapper(
-          <motion.input
-            whileHover={{ scale: 1.02 }}
-            type="text"
-            value={keys.key1}
-            onChange={(e) => handleIntegerInput(e, 'key1')}
-            placeholder="Key 1 (integer)"
-            className={inputClassName}
-          />
-        )}
-        {inputWrapper(
-          <motion.input
-            whileHover={{ scale: 1.02 }}
-            type="text"
-            value={keys.key2}
-            onChange={(e) => handleIntegerInput(e, 'key2')}
-            placeholder="Key 2 (integer)"
-            className={inputClassName}
-          />
-        )}
+        <motion.input
+          whileHover={{ scale: 1.02 }}
+          type="text"
+          value={keys.key1}
+          onChange={(e) => handleIntegerInput(e, 'key1')}
+          placeholder="Key 1 (integer)"
+          className={inputClassName}
+        />
+        <motion.input
+          whileHover={{ scale: 1.02 }}
+          type="text"
+          value={keys.key2}
+          onChange={(e) => handleIntegerInput(e, 'key2')}
+          placeholder="Key 2 (integer)"
+          className={inputClassName}
+        />
       </div>
     );
   }
 
   return (
     <div className="grid grid-cols-2 gap-4">
-      {inputWrapper(
-        <motion.input
-          whileHover={{ scale: 1.02 }}
-          type="text"
-          value={keys.key1}
-          onChange={['additive', 'multiplicative', 'autokey'].includes(cipher) 
-            ? (e) => handleIntegerInput(e, 'key1')
-            : (e) => setKeys({ ...keys, key1: e.target.value })}
-          placeholder={
-            ['additive', 'multiplicative', 'autokey'].includes(cipher)
-              ? "Enter integer key"
-              : cipher === 'playfair' 
-                ? "Enter keyword"
-                : "Enter key"
-          }
-          className={inputClassName}
-        />
-      )}
+      <motion.input
+        whileHover={{ scale: 1.02 }}
+        type="text"
+        value={keys.key1}
+        onChange={['additive', 'multiplicative', 'autokey'].includes(cipher) 
+          ? (e) => handleIntegerInput(e, 'key1')
+          : (e) => setKeys({ ...keys, key1: e.target.value })}
+        placeholder={
+          ['additive', 'multiplicative', 'autokey'].includes(cipher)
+            ? "Enter integer key"
+            : cipher === 'playfair' 
+              ? "Enter keyword"
+              : "Enter key"
+        }
+        className={inputClassName}
+      />
       <div className="invisible">
-        <input className={inputClassName} disabled />
+        <input type="text" disabled className={inputClassName} />
       </div>
     </div>
   );

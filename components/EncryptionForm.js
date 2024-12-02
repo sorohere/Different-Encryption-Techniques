@@ -64,50 +64,47 @@ const EncryptionForm = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen p-4 sm:p-6 md:p-8 bg-gradient-to-br from-blue-50 to-indigo-50"
+      className="min-h-screen p-4 sm:p-6 md:p-8 relative z-10"
     >
       <div className="w-full max-w-[500px] mx-auto">
         <motion.div 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-full bg-white/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-2xl shadow-xl"
+          className="glass-morphism w-full p-6 sm:p-8 rounded-2xl relative"
         >
           <motion.h2 
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
-            className="text-2xl sm:text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text"
+            className="text-3xl sm:text-4xl font-bold mb-8 text-center bg-gradient-to-r 
+              from-blue-600 to-indigo-600 text-transparent bg-clip-text drop-shadow-lg"
           >
             Encryption Wizard
           </motion.h2>
 
           <div className="space-y-8">
             <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="group relative"
+              className="group glow-effect"
             >
-              <label className="block text-sm font-semibold text-gray-700 mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
+              <label className="block text-sm font-semibold mb-2 text-blue-800">
                 Message to Encrypt
               </label>
-              <div className="relative">
-                <textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Enter your secret message here..."
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl transition-all duration-300 
-                    focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[120px]
-                    bg-white/70 backdrop-blur-sm resize-none
-                    placeholder:text-gray-400 font-medium"
-                />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 pointer-events-none" />
-              </div>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Enter your secret message here..."
+                className="w-full p-4 rounded-xl min-h-[100px] resize-none
+                  bg-blue-50/50 border-2 border-blue-100
+                  placeholder:text-blue-300 text-blue-900
+                  focus:ring-2 focus:ring-blue-400 focus:border-transparent
+                  transition-all duration-300 font-medium"
+              />
             </motion.div>
 
             <motion.div
-              whileHover={{ scale: 1.01 }}
               className="space-y-2"
             >
-              <label className="block text-sm font-semibold text-gray-700 mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
+              <label className="block text-sm font-semibold mb-2 text-blue-800">
                 Select Cipher Method
               </label>
               <CipherSelector
@@ -118,27 +115,21 @@ const EncryptionForm = () => {
             </motion.div>
 
             <motion.div
-              whileHover={{ scale: 1.01 }}
               className="space-y-2"
             >
-              <label className="block text-sm font-semibold text-gray-700 mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
+              <label className="block text-sm font-semibold mb-2 text-blue-800">
                 Enter Key
               </label>
               <KeyInput cipher={cipher} keys={keys} setKeys={setKeys} />
             </motion.div>
 
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
               onClick={handleEncrypt}
-              className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-indigo-600 
-                text-white font-semibold rounded-xl shadow-lg hover:shadow-xl 
-                transition-all duration-300 transform hover:-translate-y-0.5
-                text-lg relative overflow-hidden group"
+              className="w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 
+                text-white font-semibold rounded-xl relative overflow-hidden group
+                shadow-lg shadow-blue-500/20"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/50 to-indigo-700/50 
-                transform group-hover:translate-x-full transition-transform duration-500" />
-              <span className="relative">Encrypt Message</span>
+              <span className="relative text-lg">Encrypt Message</span>
             </motion.button>
           </div>
 
