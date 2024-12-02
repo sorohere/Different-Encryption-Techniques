@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 const KeyInput = ({ cipher, keys, setKeys }) => {
   // Helper function to validate integer input
@@ -8,6 +9,19 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
     // Allow empty string or integers only
     if (value === '' || /^[0-9]+$/.test(value)) {
       setKeys({ ...keys, [keyName]: value });
+    } else {
+      toast.error('Please enter numbers only');
+    }
+  };
+
+  // Helper function to validate string input
+  const handleStringInput = (e, keyName) => {
+    const value = e.target.value;
+    // Allow empty string or letters only
+    if (value === '' || /^[a-zA-Z]+$/.test(value)) {
+      setKeys({ ...keys, [keyName]: value });
+    } else {
+      toast.error('Please enter letters only');
     }
   };
 
@@ -45,15 +59,19 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
         whileHover={{ scale: 1.02 }}
         type="text"
         value={keys.key1}
-        onChange={['additive', 'multiplicative', 'autokey'].includes(cipher) 
-          ? (e) => handleIntegerInput(e, 'key1')
-          : (e) => setKeys({ ...keys, key1: e.target.value })}
+        onChange={(e) => {
+          if (['playfair', 'vigenere'].includes(cipher)) {
+            handleStringInput(e, 'key1');
+          } else {
+            handleIntegerInput(e, 'key1');
+          }
+        }}
         placeholder={
           ['additive', 'multiplicative', 'autokey'].includes(cipher)
             ? "Enter integer key"
             : cipher === 'playfair' 
-              ? "Enter keyword"
-              : "Enter key"
+              ? "Enter letters only"
+              : "Enter letters only"
         }
         className={inputClassName}
       />

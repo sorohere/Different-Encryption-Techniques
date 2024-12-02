@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import React from 'react';
+import { Toaster } from 'react-hot-toast';
 
 export default function RootLayout({ children }) {
   return (
@@ -11,6 +12,29 @@ export default function RootLayout({ children }) {
           <div className="light-wave"></div>
           <div className="light-wave"></div>
         </div>
+        <Toaster 
+          position="top-center"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+              borderRadius: '10px',
+            },
+            success: {
+              iconTheme: {
+                primary: '#4ade80',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
         {children}
       </body>
     </html>

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import CipherSelector from './CipherSelector';
 import KeyInput from './KeyInput';
 import OutputDisplay from './OutputDisplay';
@@ -33,31 +34,87 @@ const EncryptionForm = () => {
     setResult('');
   };
 
-  const handleEncrypt = () => {
-    let encryptedText = '';
-    switch (cipher) {
-      case 'additive':
-        encryptedText = additiveEncrypt(message, parseInt(keys.key1));
-        break;
-      case 'multiplicative':
-        encryptedText = multiplicativeEncrypt(message, parseInt(keys.key1));
-        break;
-      case 'affine':
-        encryptedText = affineEncrypt(message, parseInt(keys.key1), parseInt(keys.key2));
-        break;
-      case 'autokey':
-        encryptedText = autokeyEncrypt(message, keys.key1);
-        break;
-      case 'playfair':
-        encryptedText = playfairEncrypt(message, keys.key1);
-        break;
-      case 'vigenere':
-        encryptedText = vigenereEncrypt(message, keys.key1);
-        break;
-      default:
-        break;
+  const validateMultiplicativeKey = (key) => {
+    // Function to calculate GCD
+    const gcd = (a, b) => {
+      while (b !== 0) {
+        let temp = b;
+        b = a % b;
+        a = temp;
+      }
+      return a;
+    };
+
+    const numKey = parseInt(key);
+    if (gcd(numKey, 26) !== 1) {
+      return false;
     }
-    setResult(encryptedText);
+    return true;
+  };
+
+  const handleEncrypt = () => {
+    // Validate message
+    if (!message.trim()) {
+      toast.error('Please enter a message to encrypt');
+      return;
+    }
+
+    // Validate keys based on cipher type
+    if (cipher === 'affine') {
+      if (!keys.key1 || !keys.key2) {
+        toast.error('Please enter both keys for Affine cipher');
+        return;
+      }
+      if (!validateMultiplicativeKey(keys.key1)) {
+        toast.error('First key must be coprime with 26 for Affine cipher');
+        return;
+      }
+    } else if (cipher === 'multiplicative') {
+      if (!keys.key1) {
+        toast.error('Please enter a key');
+        return;
+      }
+      if (!validateMultiplicativeKey(keys.key1)) {
+        toast.error('Key must be coprime with 26 for Multiplicative cipher');
+        return;
+      }
+    } else if (['additive', 'autokey', 'playfair', 'vigenere'].includes(cipher)) {
+      if (!keys.key1) {
+        toast.error('Please enter a key');
+        return;
+      }
+    }
+
+    // If all validations pass, proceed with encryption
+    let encryptedText = '';
+    try {
+      switch (cipher) {
+        case 'additive':
+          encryptedText = additiveEncrypt(message, parseInt(keys.key1));
+          break;
+        case 'multiplicative':
+          encryptedText = multiplicativeEncrypt(message, parseInt(keys.key1));
+          break;
+        case 'affine':
+          encryptedText = affineEncrypt(message, parseInt(keys.key1), parseInt(keys.key2));
+          break;
+        case 'autokey':
+          encryptedText = autokeyEncrypt(message, keys.key1);
+          break;
+        case 'playfair':
+          encryptedText = playfairEncrypt(message, keys.key1);
+          break;
+        case 'vigenere':
+          encryptedText = vigenereEncrypt(message, keys.key1);
+          break;
+        default:
+          break;
+      }
+      setResult(encryptedText);
+      toast.success('Message encrypted successfully!');
+    } catch (error) {
+      toast.error(error.message || 'Encryption failed');
+    }
   };
 
   return (
@@ -133,7 +190,14 @@ const EncryptionForm = () => {
             </motion.button>
           </div>
 
-          {result && <OutputDisplay text={result} />}
+          {result && (
+            <OutputDisplay 
+              text={result} 
+              originalText={message}
+              cipher={cipher}
+              keys={keys}
+            />
+          )}
         </motion.div>
       </div>
     </motion.div>
