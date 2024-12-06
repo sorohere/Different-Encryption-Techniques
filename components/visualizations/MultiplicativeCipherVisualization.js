@@ -26,7 +26,7 @@ const MultiplicativeCipherVisualization = () => {
       return {
         original: char,
         shifted: newChar,
-        calculation: `${char} (${position}) × ${key} ≡ ${multiplied} (mod 26) ≡ ${newChar}`
+        calculation: `${char} (${position})× ${key} ≡ ${position * key } (mod 26) ≡ ${multiplied} ≡ ${newChar}`
       };
     }
     return { original: char, shifted: char, calculation: 'Non-alphabetic character' };

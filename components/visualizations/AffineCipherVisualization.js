@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { PlayIcon, PauseIcon, ResetIcon, CloseIcon, ForwardIcon, BackwardIcon } from '../icons/VisualizationIcons';
 
-const AdditiveCipherVisualization = () => {
+const AffineCipherVisualization = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState(0);
@@ -12,23 +12,32 @@ const AdditiveCipherVisualization = () => {
   const [speed, setSpeed] = useState(1000);
 
   const plaintext = searchParams.get('text') || '';
-  const key = parseInt(searchParams.get('key')) || 0;
+  const key1 = parseInt(searchParams.get('key1')) || 0;
+  const key2 = parseInt(searchParams.get('key2')) || 0;
 
   const steps = plaintext.split('').map((char, index) => {
     if (char.match(/[a-zA-Z]/)) {
       const code = char.charCodeAt(0);
       const isUpperCase = code >= 65 && code <= 90;
       const offset = isUpperCase ? 65 : 97;
-      const shifted = (code - offset + key) % 26;
+      const position = code - offset;
+      const multiplied = (position * key1) % 26;
+      const shifted = (multiplied + key2) % 26;
       const newChar = String.fromCharCode(shifted + offset);
 
       return {
         original: char,
+        multiplied: String.fromCharCode(multiplied + offset),
         shifted: newChar,
-        calculation: `${char} (${code - offset}) + ${key} ≡ ${code - offset + key}(mod 26) ≡ ${shifted} ≡ ${newChar}`
+        calculation: `${char} (${position}) × ${key1} ≡ ${multiplied} (mod 26) + ${key2} ≡ ${shifted} ≡ ${newChar}`
       };
     }
-    return { original: char, shifted: char, calculation: 'Non-alphabetic character' };
+    return { 
+      original: char, 
+      multiplied: char, 
+      shifted: char, 
+      calculation: 'Non-alphabetic character' 
+    };
   });
 
   useEffect(() => {
@@ -85,7 +94,7 @@ const AdditiveCipherVisualization = () => {
       </button>
 
       <h2 className="text-2xl font-bold text-center text-blue-800">
-        Additive Cipher Visualization
+        Affine Cipher Visualization
       </h2>
 
       <div className="flex justify-center items-center space-x-4 mb-8">
@@ -139,7 +148,7 @@ const AdditiveCipherVisualization = () => {
       <div className="grid grid-cols-1 gap-6">
         <div className="bg-white/50 p-6 rounded-xl">
           <h3 className="text-lg font-semibold mb-4 text-blue-800">Input</h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <p className="text-sm text-blue-600 mb-2">Plaintext:</p>
               <p className="font-mono bg-blue-50 p-2 rounded break-all whitespace-pre-wrap min-h-[40px]">
@@ -147,8 +156,12 @@ const AdditiveCipherVisualization = () => {
               </p>
             </div>
             <div>
-              <p className="text-sm text-blue-600 mb-2">Key:</p>
-              <p className="font-mono bg-blue-50 p-2 rounded">{key}</p>
+              <p className="text-sm text-blue-600 mb-2">Key 1 (multiplicative):</p>
+              <p className="font-mono bg-blue-50 p-2 rounded">{key1}</p>
+            </div>
+            <div>
+              <p className="text-sm text-blue-600 mb-2">Key 2 (additive):</p>
+              <p className="font-mono bg-blue-50 p-2 rounded">{key2}</p>
             </div>
           </div>
         </div>
@@ -161,7 +174,7 @@ const AdditiveCipherVisualization = () => {
               <div className="flex flex-wrap gap-2 justify-center">
                 {steps.map((step, index) => (
                   <motion.div
-                    key={index}
+                    key={`original-${index}`}
                     className={`w-8 h-8 flex items-center justify-center rounded 
                       ${index === currentStep ? 'bg-blue-500 text-white' : 'bg-blue-50'}`}
                   >
@@ -171,11 +184,25 @@ const AdditiveCipherVisualization = () => {
               </div>
             </div>
             <div className="w-full">
-              <p className="text-sm text-blue-600 mb-2 text-center">Encrypted</p>
+              <p className="text-sm text-blue-600 mb-2 text-center">After Multiplication</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {steps.map((step, index) => (
                   <motion.div
-                    key={index}
+                    key={`multiplied-${index}`}
+                    className={`w-8 h-8 flex items-center justify-center rounded 
+                      ${index === currentStep ? 'bg-purple-500 text-white' : 'bg-blue-50'}`}
+                  >
+                    {index <= currentStep ? step.multiplied : '?'}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+            <div className="w-full">
+              <p className="text-sm text-blue-600 mb-2 text-center">Final (After Addition)</p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {steps.map((step, index) => (
+                  <motion.div
+                    key={`shifted-${index}`}
                     className={`w-8 h-8 flex items-center justify-center rounded 
                       ${index === currentStep ? 'bg-green-500 text-white' : 'bg-blue-50'}`}
                   >
@@ -203,4 +230,4 @@ const AdditiveCipherVisualization = () => {
   );
 };
 
-export default AdditiveCipherVisualization;
+export default AffineCipherVisualization; 
