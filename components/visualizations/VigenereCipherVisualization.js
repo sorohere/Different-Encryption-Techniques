@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { PlayIcon, PauseIcon, ResetIcon, CloseIcon, ForwardIcon, BackwardIcon } from '../icons/VisualizationIcons';
 
-const AffineCipherVisualization = () => {
+const VigenereCipherVisualization = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState(0);
@@ -12,8 +12,10 @@ const AffineCipherVisualization = () => {
   const [speed, setSpeed] = useState(1000);
 
   const plaintext = searchParams.get('text') || '';
-  const key1 = parseInt(searchParams.get('key1')) || 0;
-  const key2 = parseInt(searchParams.get('key2')) || 0;
+  const key = searchParams.get('key') || '';
+
+  // Process key to handle only letters
+  const processedKey = key.toUpperCase().replace(/[^A-Z]/g, '');
 
   const steps = plaintext.split('').map((char, index) => {
     if (char.match(/[a-zA-Z]/)) {
@@ -21,22 +23,30 @@ const AffineCipherVisualization = () => {
       const isUpperCase = code >= 65 && code <= 90;
       const offset = isUpperCase ? 65 : 97;
       const position = code - offset;
-      const multiplied = (position * key1) % 26;
-      const shifted = (multiplied + key2) % 26;
+
+      // Count only letters for key index
+      let letterCount = 0;
+      for (let i = 0; i < index; i++) {
+        if (plaintext[i].match(/[a-zA-Z]/)) letterCount++;
+      }
+      
+      const keyChar = processedKey[letterCount % processedKey.length];
+      const keyCode = keyChar.charCodeAt(0) - 65;
+      const shifted = (position + keyCode) % 26;
       const newChar = String.fromCharCode(shifted + offset);
 
       return {
         original: char,
-        multiplied: String.fromCharCode(multiplied + offset),
+        keyChar: keyChar,
         shifted: newChar,
-        calculation: `${char} (${position}) × ${key1}(key1) ≡ ${position * key1}(mod 26) ≡ ${multiplied} + ${key2}(key2) ≡ ${multiplied + key2}(mod 26) ≡ ${shifted} ≡ ${newChar}`
+        calculation: `${char} (${position}) + ${keyChar} (${keyCode}) ≡ ${position + keyCode} (mod 26) ≡ ${shifted} ≡ ${newChar}`
       };
     }
     return { 
       original: char, 
-      multiplied: char, 
+      keyChar: ' ',
       shifted: char, 
-      calculation: 'Non-alphabetic character' 
+      calculation: 'Space or non-alphabetic character' 
     };
   });
 
@@ -94,7 +104,7 @@ const AffineCipherVisualization = () => {
       </button>
 
       <h2 className="text-2xl font-bold text-center text-blue-800">
-        Affine Cipher Visualization
+        Vigenere Cipher Visualization
       </h2>
 
       <div className="flex justify-center items-center space-x-4 mb-8">
@@ -148,7 +158,7 @@ const AffineCipherVisualization = () => {
       <div className="grid grid-cols-1 gap-6">
         <div className="bg-white/50 p-6 rounded-xl">
           <h3 className="text-lg font-semibold mb-4 text-blue-800">Input</h3>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-blue-600 mb-2">Plaintext:</p>
               <p className="font-mono bg-blue-50 p-2 rounded break-all whitespace-pre-wrap min-h-[40px]">
@@ -156,12 +166,10 @@ const AffineCipherVisualization = () => {
               </p>
             </div>
             <div>
-              <p className="text-sm text-blue-600 mb-2">Key 1 (multiplicative):</p>
-              <p className="font-mono bg-blue-50 p-2 rounded">{key1}</p>
-            </div>
-            <div>
-              <p className="text-sm text-blue-600 mb-2">Key 2 (additive):</p>
-              <p className="font-mono bg-blue-50 p-2 rounded">{key2}</p>
+              <p className="text-sm text-blue-600 mb-2">Key:</p>
+              <p className="font-mono bg-blue-50 p-2 rounded">
+                {processedKey} (repeating)
+              </p>
             </div>
           </div>
         </div>
@@ -170,43 +178,48 @@ const AffineCipherVisualization = () => {
           <h3 className="text-lg font-semibold mb-4 text-blue-800">Visualization</h3>
           <div className="flex flex-col items-center space-y-6 mb-6">
             <div className="w-full">
-              <p className="text-sm text-blue-600 mb-2 text-center">Original</p>
+              <p className="text-sm text-blue-600 mb-2 text-center">Original Text</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {steps.map((step, index) => (
                   <motion.div
                     key={`original-${index}`}
                     className={`w-8 h-8 flex items-center justify-center rounded 
-                      ${index === currentStep ? 'bg-blue-500 text-white' : 'bg-blue-50'}`}
+                      ${step.original === ' ' ? 'bg-transparent' : 
+                        index === currentStep ? 'bg-blue-500 text-white' : 'bg-blue-50'}`}
                   >
-                    {step.original}
+                    {step.original === ' ' ? '\u00A0' : step.original}
                   </motion.div>
                 ))}
               </div>
             </div>
             <div className="w-full">
-              <p className="text-sm text-blue-600 mb-2 text-center">After Multiplication</p>
+              <p className="text-sm text-blue-600 mb-2 text-center">Key Stream</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {steps.map((step, index) => (
                   <motion.div
-                    key={`multiplied-${index}`}
+                    key={`key-${index}`}
                     className={`w-8 h-8 flex items-center justify-center rounded 
-                      ${index === currentStep ? 'bg-purple-500 text-white' : 'bg-blue-50'}`}
+                      ${step.original === ' ' ? 'bg-transparent' : 
+                        index === currentStep ? 'bg-purple-500 text-white' : 'bg-blue-50'}`}
                   >
-                    {index <= currentStep ? step.multiplied : '?'}
+                    {step.original === ' ' ? '\u00A0' : 
+                      index <= currentStep ? step.keyChar : '?'}
                   </motion.div>
                 ))}
               </div>
             </div>
             <div className="w-full">
-              <p className="text-sm text-blue-600 mb-2 text-center">Final (After Addition)</p>
+              <p className="text-sm text-blue-600 mb-2 text-center">Encrypted Text</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {steps.map((step, index) => (
                   <motion.div
                     key={`shifted-${index}`}
                     className={`w-8 h-8 flex items-center justify-center rounded 
-                      ${index === currentStep ? 'bg-green-500 text-white' : 'bg-blue-50'}`}
+                      ${step.original === ' ' ? 'bg-transparent' : 
+                        index === currentStep ? 'bg-green-500 text-white' : 'bg-blue-50'}`}
                   >
-                    {index <= currentStep ? step.shifted : '?'}
+                    {step.original === ' ' ? '\u00A0' : 
+                      index <= currentStep ? step.shifted : '?'}
                   </motion.div>
                 ))}
               </div>
@@ -230,4 +243,4 @@ const AffineCipherVisualization = () => {
   );
 };
 
-export default AffineCipherVisualization; 
+export default VigenereCipherVisualization; 
