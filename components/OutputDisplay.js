@@ -16,6 +16,8 @@ const OutputDisplay = ({ text, originalText, cipher, keys }) => {
       router.push(`/visualize/autokey?text=${encodeURIComponent(originalText)}&key=${keys.key1}`);
     } else if (cipher === 'vigenere') {
       router.push(`/visualize/vigenere?text=${encodeURIComponent(originalText)}&key=${keys.key1}`);
+    } else if (cipher === 'playfair') {
+      router.push(`/visualize/playfair?text=${encodeURIComponent(originalText)}&key=${keys.key1}`);
     }
   };
 
@@ -33,7 +35,7 @@ const OutputDisplay = ({ text, originalText, cipher, keys }) => {
         <p className="text-blue-900 font-mono break-all tracking-wide">{text}</p>
       </div>
       <div className="mt-4 flex justify-end space-x-3">
-        {(cipher === 'additive' || cipher === 'multiplicative' || cipher === 'affine' || cipher === 'autokey' || cipher === 'vigenere') && (
+        {(cipher === 'additive' || cipher === 'multiplicative' || cipher === 'affine' || cipher === 'autokey' || cipher === 'vigenere' || cipher === 'playfair') && (
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
