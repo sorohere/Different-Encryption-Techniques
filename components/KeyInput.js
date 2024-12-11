@@ -3,10 +3,8 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
 const KeyInput = ({ cipher, keys, setKeys }) => {
-  // Helper function to validate integer input
   const handleIntegerInput = (e, keyName) => {
     const value = e.target.value;
-    // Allow empty string or integers only
     if (value === '' || /^[0-9]+$/.test(value)) {
       setKeys({ ...keys, [keyName]: value });
     } else {
@@ -14,10 +12,8 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
     }
   };
 
-  // Helper function to validate string input
   const handleStringInput = (e, keyName) => {
     const value = e.target.value;
-    // Allow empty string or letters only
     if (value === '' || /^[a-zA-Z]+$/.test(value)) {
       setKeys({ ...keys, [keyName]: value });
     } else {
@@ -25,7 +21,6 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
     }
   };
 
-  // Add these new helper functions
   const createEmptyMatrix = (size) => {
     return Array(size).fill().map(() => Array(size).fill(''));
   };
@@ -66,46 +61,56 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
     );
   }
 
-  // Modify the return statement to handle Hill Cipher
   if (cipher === 'hill') {
     return (
-      <div className="space-y-4">
-        <motion.input
-          whileHover={{ scale: 1.02 }}
-          type="text"
-          value={keys.matrixSize || ''}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (value === '' || /^[0-9]+$/.test(value)) {
-              const size = value === '' ? '' : parseInt(value);
-              setKeys({
-                matrixSize: value,
-                key1: size ? JSON.stringify(createEmptyMatrix(size)) : ''
-              });
-            }
-          }}
-          placeholder="Enter matrix size (n for nxn matrix)"
-          className={inputClassName}
-        />
+      <div className="space-y-4 w-full">
+        <div className="flex space-x-4">
+          <motion.input
+            whileHover={{ scale: 1.02 }}
+            type="text"
+            value={keys.matrixSize || ''}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === '' || /^[0-9]+$/.test(value)) {
+                const size = value === '' ? '' : parseInt(value);
+                setKeys({
+                  matrixSize: value,
+                  key1: size ? JSON.stringify(createEmptyMatrix(size)) : ''
+                });
+              }
+            }}
+            placeholder="Enter matrix size (n for nxn matrix)"
+            className={inputClassName}
+          />
+          <div className="invisible">
+            <input type="text" disabled className={inputClassName} />
+          </div>
+        </div>
         
         {keys.matrixSize && parseInt(keys.matrixSize) > 0 && (
-          <div className="grid gap-2">
-            <label className="text-sm font-semibold text-blue-800">Enter Key Matrix:</label>
-            <div className="grid gap-2">
-              {Array(parseInt(keys.matrixSize)).fill().map((_, rowIndex) => (
-                <div key={rowIndex} className="flex gap-2">
-                  {Array(parseInt(keys.matrixSize)).fill().map((_, colIndex) => (
-                    <input
-                      key={colIndex}
-                      type="text"
-                      className={`${inputClassName} w-16 text-center`}
-                      value={JSON.parse(keys.key1 || '[]')[rowIndex]?.[colIndex] || ''}
-                      onChange={(e) => handleMatrixInput(rowIndex, colIndex, e.target.value)}
-                      placeholder="0"
-                    />
-                  ))}
-                </div>
-              ))}
+          <div className="w-full">
+            <div className="grid gap-2 w-full overflow-x-auto">
+              <label className="text-sm font-semibold text-blue-800 mb-2">
+                Enter Key Matrix:
+              </label>
+              <div className="inline-block min-w-full">
+                {Array(parseInt(keys.matrixSize)).fill().map((_, rowIndex) => (
+                  <div key={rowIndex} className="flex gap-2 mb-2 justify-center">
+                    {Array(parseInt(keys.matrixSize)).fill().map((_, colIndex) => (
+                      <input
+                        key={colIndex}
+                        type="text"
+                        className="w-12 h-12 p-1 bg-blue-50/50 border-2 border-blue-100 
+                          text-blue-900 rounded-lg focus:ring-2 focus:ring-blue-400 
+                          focus:border-transparent transition-all duration-300 text-center"
+                        value={JSON.parse(keys.key1 || '[]')[rowIndex]?.[colIndex] || ''}
+                        onChange={(e) => handleMatrixInput(rowIndex, colIndex, e.target.value)}
+                        placeholder="0"
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
