@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import CipherSelector from './CipherSelector';
 import KeyInput from './KeyInput';
 import OutputDisplay from './OutputDisplay';
+import { hillCipherEncrypt } from '../utils/hillCipher';
 import { encrypt as additiveEncrypt } from '../utils/additiveCipher';
 import { encrypt as multiplicativeEncrypt } from '../utils/multiplicativeCipher';
 import { encrypt as affineEncrypt } from '../utils/affineCipher';
@@ -20,6 +21,7 @@ const ciphers = [
   'autokey',
   'playfair',
   'vigenere',
+  'hill'
 ];
 
 const EncryptionForm = () => {
@@ -107,6 +109,11 @@ const EncryptionForm = () => {
         case 'vigenere':
           encryptedText = vigenereEncrypt(message, keys.key1);
           break;
+        case 'hill':
+          const matrixSize = parseInt(keys.matrixSize);
+          const keyMatrix = JSON.parse(keys.key1);
+          encryptedText = hillCipherEncrypt(message, keyMatrix);
+          break;
         default:
           break;
       }
@@ -140,9 +147,7 @@ const EncryptionForm = () => {
           </motion.h2>
 
           <div className="space-y-8">
-            <motion.div
-              className="group glow-effect"
-            >
+            <motion.div className="group glow-effect">
               <label className="block text-sm font-semibold mb-2 text-blue-800">
                 Message to Encrypt
               </label>
@@ -158,9 +163,7 @@ const EncryptionForm = () => {
               />
             </motion.div>
 
-            <motion.div
-              className="space-y-2"
-            >
+            <motion.div className="space-y-2">
               <label className="block text-sm font-semibold mb-2 text-blue-800">
                 Select Cipher Method
               </label>
@@ -171,9 +174,7 @@ const EncryptionForm = () => {
               />
             </motion.div>
 
-            <motion.div
-              className="space-y-2"
-            >
+            <motion.div className="space-y-2">
               <label className="block text-sm font-semibold mb-2 text-blue-800">
                 Enter Key
               </label>
