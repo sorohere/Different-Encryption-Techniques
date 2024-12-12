@@ -29,6 +29,7 @@ const EncryptionForm = () => {
   const [cipher, setCipher] = useState('additive');
   const [keys, setKeys] = useState({ key1: '', key2: '' });
   const [result, setResult] = useState('');
+  const [keyMatrix, setKeyMatrix] = useState('');
 
   const handleCipherChange = (e) => {
     setCipher(e.target.value);
@@ -113,11 +114,12 @@ const EncryptionForm = () => {
           const matrixSize = parseInt(keys.matrixSize);
           const keyMatrix = JSON.parse(keys.key1);
           encryptedText = hillCipherEncrypt(message, keyMatrix);
+          setKeyMatrix(keyMatrix);
+          setResult(encryptedText);
           break;
         default:
           break;
       }
-      setResult(encryptedText);
       toast.success('Message encrypted successfully!');
     } catch (error) {
       toast.error(error.message || 'Encryption failed');
@@ -196,7 +198,7 @@ const EncryptionForm = () => {
               text={result} 
               originalText={message}
               cipher={cipher}
-              keys={keys}
+              keys={cipher === 'hill' ? keyMatrix : keys}
             />
           )}
         </motion.div>

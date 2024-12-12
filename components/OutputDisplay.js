@@ -19,7 +19,8 @@ const OutputDisplay = ({ text, originalText, cipher, keys }) => {
     } else if (cipher === 'playfair') {
       router.push(`/visualize/playfair?text=${encodeURIComponent(originalText)}&key=${keys.key1}`);
     } else if (cipher === 'hill') { 
-      const keyMatrixString = encodeURIComponent(JSON.stringify(keys.key1));
+      // For Hill cipher, keys is the actual matrix
+      const keyMatrixString = encodeURIComponent(JSON.stringify(keys));
       router.push(`/visualize/hill?text=${encodeURIComponent(originalText)}&key=${keyMatrixString}`);
     }
   };

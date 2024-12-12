@@ -89,30 +89,43 @@ const Controls = ({
   </div>
 );
 
-const MatrixDisplay = ({ matrix, label, highlight }) => (
-  <div className="flex flex-col items-center m-2">
-    <span className="text-sm text-gray-600 mb-2">{label}</span>
-    <div className="border-2 border-blue-500 p-2 rounded-lg">
-      {matrix.map((row, i) => (
-        <div key={i} className="flex">
-          {row.map((cell, j) => (
-            <motion.div
-              key={j}
-              className={`w-10 h-10 flex items-center justify-center m-1 rounded-md
-                ${highlight?.[i]?.[j] ? 'bg-yellow-200' : 'bg-gray-100'}`}
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-            >
-              {cell}
-            </motion.div>
-          ))}
+const MatrixDisplay = ({ matrix, label, highlight }) => {
+  if (!Array.isArray(matrix) || !matrix.length || !Array.isArray(matrix[0])) {
+    return (
+      <div className="flex flex-col items-center m-2">
+        <span className="text-sm text-gray-600 mb-2">{label}</span>
+        <div className="border-2 border-red-500 p-4 rounded-lg">
+          <span className="text-red-500">Invalid Matrix</span>
         </div>
-      ))}
     </div>
-  </div>
-);
+    );
+  }
 
-const BlockDisplay = ({ block, label, isAnimated = false }) => (
+  return (
+    <div className="flex flex-col items-center m-2">
+      <span className="text-sm text-gray-600 mb-2">{label}</span>
+      <div className="border-2 border-blue-500 p-2 rounded-lg">
+        {matrix.map((row, i) => (
+          <div key={i} className="flex">
+            {row.map((cell, j) => (
+              <motion.div
+                key={j}
+                className={`w-10 h-10 flex items-center justify-center m-1 rounded-md
+                  ${highlight?.[i]?.[j] ? 'bg-yellow-200' : 'bg-gray-100'}`}
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+              >
+                {cell}
+              </motion.div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const BlockDisplay = ({ block, label, isAnimated = false, highlightIndex = -1 }) => (
   <motion.div
     className="flex flex-col items-center m-2"
     initial={isAnimated ? { opacity: 0, y: 20 } : false}
@@ -123,7 +136,8 @@ const BlockDisplay = ({ block, label, isAnimated = false }) => (
       {block.map((char, i) => (
         <div
           key={i}
-          className="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-md"
+          className={`w-10 h-10 flex items-center justify-center rounded-md
+            ${highlightIndex === i ? 'bg-green-200' : 'bg-blue-100'}`}
         >
           {char}
         </div>
@@ -132,39 +146,84 @@ const BlockDisplay = ({ block, label, isAnimated = false }) => (
   </motion.div>
 );
 
-const ResultDisplay = ({ encryptedBlocks, currentBlockIndex }) => (
-  <div className="bg-white p-6 rounded-lg shadow-md">
-    <h3 className="text-xl font-semibold text-blue-700 mb-4">Final Result</h3>
+const InputDisplay = ({ text, blockSize, currentBlockIndex }) => {
+  const blocks = [];
+  for (let i = 0; i < text.length; i += blockSize) {
+    blocks.push(text.slice(i, i + blockSize));
+  }
+
+  return (
     <div className="flex flex-wrap justify-center gap-4">
-      {encryptedBlocks.map((block, blockIndex) => (
-        <div key={blockIndex} className="flex space-x-2">
-          {block.map((char, charIndex) => (
+      {blocks.map((block, index) => (
+        <div key={index} className="flex space-x-2">
+          {Array.from(block).map((char, charIndex) => (
             <div
               key={charIndex}
               className={`w-10 h-10 flex items-center justify-center rounded-md
-                ${blockIndex <= currentBlockIndex ? 'bg-green-100' : 'bg-gray-100'}`}
+                ${index === currentBlockIndex ? 'bg-green-200' : 'bg-blue-100'}`}
             >
-              {blockIndex <= currentBlockIndex ? char : '?'}
+              {char}
             </div>
           ))}
         </div>
       ))}
     </div>
-  </div>
-);
+  );
+};
+
+const ResultDisplay = ({ encryptedBlocks, currentBlockIndex, currentBlockStep }) => {
+  // Only show result when we reach the result step (step 3) for that block
+  const shouldShowBlock = (blockIndex) => {
+    return blockIndex < currentBlockIndex || (blockIndex === currentBlockIndex && currentBlockStep === 3);
+  };
+
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h3 className="text-xl font-semibold text-blue-700 mb-4">Final Result</h3>
+      <div className="flex flex-wrap justify-center gap-4">
+        {encryptedBlocks.map((block, blockIndex) => (
+          <div key={blockIndex} className="flex space-x-2">
+            {block.map((char, charIndex) => (
+              <div
+                key={charIndex}
+                className={`w-10 h-10 flex items-center justify-center rounded-md
+                  ${shouldShowBlock(blockIndex) ? 'bg-green-100' : 'bg-gray-100'}`}
+              >
+                {shouldShowBlock(blockIndex) ? char : '?'}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const HillCipherVisualization = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentBlockIndex, setCurrentBlockIndex] = useState(0);
+  const [currentBlockStep, setCurrentBlockStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1500);
 
   const plaintext = searchParams.get('text') || '';
   const keyStr = searchParams.get('key') || '';
 
-  // Parse key matrix from string
-  const keyMatrix = JSON.parse(keyStr || '[]');
+  // Parse key matrix from string and ensure it's a valid matrix
+  let keyMatrix = [];
+  try {
+    keyMatrix = JSON.parse(decodeURIComponent(keyStr) || '[]');
+    if (!Array.isArray(keyMatrix) || !keyMatrix.length || !Array.isArray(keyMatrix[0])) {
+      throw new Error('Invalid key matrix format');
+    }
+    // Convert any string numbers to actual numbers
+    keyMatrix = keyMatrix.map(row => row.map(cell => parseInt(cell) || 0));
+  } catch (error) {
+    console.error('Error parsing key matrix:', error);
+    keyMatrix = [[0]]; // Default to 1x1 matrix if invalid
+  }
+
   const size = keyMatrix.length;
 
   // Prepare text and create blocks
@@ -189,43 +248,58 @@ const HillCipherVisualization = () => {
     .map(block => block.map(numberToLetter))
     .join('');
 
-  const totalSteps = textBlocks.length * 4;
-
-  useEffect(() => {
-    let timer;
-    if (isPlaying && currentStep < totalSteps) {
-      timer = setTimeout(() => {
-        setCurrentStep(prev => prev + 1);
-      }, speed);
-    } else if (currentStep >= totalSteps) {
-      setIsPlaying(false);
-    }
-    return () => clearTimeout(timer);
-  }, [isPlaying, currentStep, totalSteps, speed]);
-
-  const handleClose = () => router.back();
-  const currentBlockIndex = Math.floor(currentStep / 4);
-  const currentBlockStep = currentStep % 4;
-
-  const canStepBackward = currentStep > 0;
-  const canStepForward = currentStep < totalSteps;
-
   const handleStepForward = () => {
-    if (canStepForward) {
-      setCurrentStep(prev => prev + 1);
+    if (currentBlockStep < 3) {
+      setCurrentBlockStep(currentBlockStep + 1);
+    } else if (currentBlockIndex < textBlocks.length - 1) {
+      setCurrentBlockIndex(currentBlockIndex + 1);
+      setCurrentBlockStep(0);
+    } else {
+      // Reset animation or stop playing
+      setIsPlaying(false);
     }
   };
 
   const handleStepBackward = () => {
-    if (canStepBackward) {
-      setCurrentStep(prev => prev - 1);
+    if (currentBlockStep > 0) {
+      setCurrentBlockStep(currentBlockStep - 1);
+    } else if (currentBlockIndex > 0) {
+      setCurrentBlockIndex(currentBlockIndex - 1);
+      setCurrentBlockStep(3);
     }
   };
 
   const handleReset = () => {
-    setCurrentStep(0);
+    setCurrentBlockIndex(0);
+    setCurrentBlockStep(0);
     setIsPlaying(false);
   };
+
+  // Check if we can move forward or backward
+  const canStepForward = !(currentBlockIndex === textBlocks.length - 1 && currentBlockStep === 3);
+  const canStepBackward = !(currentBlockIndex === 0 && currentBlockStep === 0);
+
+  // Only show visualization steps if we have valid blocks
+  const showVisualization = textBlocks.length > 0 && currentBlockIndex < textBlocks.length;
+
+  useEffect(() => {
+    let timer;
+    if (isPlaying) {
+      timer = setInterval(() => {
+        if (currentBlockStep < 3) {
+          setCurrentBlockStep(prev => prev + 1);
+        } else if (currentBlockIndex < textBlocks.length - 1) {
+          setCurrentBlockIndex(prev => prev + 1);
+          setCurrentBlockStep(0);
+        } else {
+          setIsPlaying(false);
+        }
+      }, 2000);
+    }
+    return () => clearInterval(timer);
+  }, [isPlaying, currentBlockStep, currentBlockIndex, textBlocks.length]);
+
+  const handleClose = () => router.back();
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
@@ -248,10 +322,14 @@ const HillCipherVisualization = () => {
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-semibold text-blue-700 mb-4">Input</h3>
             <div className="flex justify-center items-center space-x-8">
-              <BlockDisplay
-                block={Array.from(preparedText)}
-                label="Prepared Text"
-              />
+              <div className="flex flex-col items-center">
+                <span className="text-sm text-gray-600 mb-2">Prepared Text</span>
+                <InputDisplay
+                  text={preparedText}
+                  blockSize={size}
+                  currentBlockIndex={currentBlockIndex}
+                />
+              </div>
               <MatrixDisplay
                 matrix={keyMatrix}
                 label="Key Matrix"
@@ -260,111 +338,148 @@ const HillCipherVisualization = () => {
           </div>
 
           <AnimatePresence mode="wait">
-            {currentBlockStep === 0 && (
-              <motion.div
-                key="division"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="bg-white p-6 rounded-lg shadow-md"
-              >
-                <h3 className="text-xl font-semibold text-blue-700 mb-4">
-                  Block {currentBlockIndex + 1}: Text Division
-                </h3>
-                <BlockDisplay
-                  block={Array.from(textBlocks[currentBlockIndex])}
-                  label="Current Block"
-                  isAnimated
-                />
-              </motion.div>
-            )}
+            {showVisualization && (
+              <>
+                {currentBlockStep === 0 && (
+                  <motion.div
+                    key="division"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="bg-white p-6 rounded-lg shadow-md"
+                  >
+                    <h3 className="text-xl font-semibold text-blue-700 mb-4">
+                      Block {currentBlockIndex + 1}: Text Division
+                    </h3>
+                    <BlockDisplay
+                      block={Array.from(textBlocks[currentBlockIndex] || '')}
+                      label="Current Block"
+                      isAnimated
+                      highlightIndex={-1}
+                    />
+                  </motion.div>
+                )}
 
-            {currentBlockStep === 1 && (
-              <motion.div
-                key="numerical"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="bg-white p-6 rounded-lg shadow-md"
-              >
-                <h3 className="text-xl font-semibold text-blue-700 mb-4">
-                  Numerical Conversion
-                </h3>
-                <BlockDisplay
-                  block={Array.from(textBlocks[currentBlockIndex]).map(
-                    (char, i) => `${char}=${letterToNumber(char)}`
-                  )}
-                  label="Letter to Number"
-                  isAnimated
-                />
-              </motion.div>
-            )}
-
-            {currentBlockStep === 2 && (
-              <motion.div
-                key="multiplication"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="bg-white p-6 rounded-lg shadow-md"
-              >
-                <h3 className="text-xl font-semibold text-blue-700 mb-4">
-                  Matrix Multiplication
-                </h3>
-                <div className="flex items-center justify-center space-x-4">
-                  <MatrixDisplay
-                    matrix={keyMatrix}
-                    label="Key Matrix"
-                  />
-                  <span className="text-2xl">×</span>
-                  <div className="flex flex-col items-center">
-                    <span className="text-sm text-gray-600 mb-2">Number Vector</span>
-                    <div className="border-2 border-blue-500 p-2 rounded-lg">
-                      {numericalBlocks[currentBlockIndex].map((num, i) => (
-                        <div key={i} className="w-10 h-10 flex items-center justify-center">
-                          {num}
+                {currentBlockStep === 1 && (
+                  <motion.div
+                    key="numerical"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="bg-white p-6 rounded-lg shadow-md"
+                  >
+                    <h3 className="text-xl font-semibold text-blue-700 mb-4">
+                      Numerical Conversion
+                    </h3>
+                    <div className="flex flex-wrap justify-center gap-4">
+                      {Array.from(textBlocks[currentBlockIndex] || '').map((char, i) => (
+                        <div key={i} className="flex flex-col items-center">
+                          <div className="w-12 h-12 flex items-center justify-center bg-blue-100 rounded-t-lg border-t-2 border-x-2 border-blue-200">
+                            {char}
+                          </div>
+                          <div className="w-12 h-12 flex items-center justify-center bg-green-100 rounded-b-lg border-b-2 border-x-2 border-green-200">
+                            {letterToNumber(char)}
+                          </div>
+                          <div className="text-sm text-gray-500 mt-1">
+                            Position
+                          </div>
                         </div>
                       ))}
                     </div>
-                  </div>
-                  <span className="text-2xl">=</span>
-                  <div className="flex flex-col items-center">
-                    <span className="text-sm text-gray-600 mb-2">Result (mod 26)</span>
-                    <div className="border-2 border-blue-500 p-2 rounded-lg">
+                  </motion.div>
+                )}
+
+                {currentBlockStep === 2 && (
+                  <motion.div
+                    key="multiplication"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="bg-white p-6 rounded-lg shadow-md"
+                  >
+                    <h3 className="text-xl font-semibold text-blue-700 mb-4">
+                      Matrix Multiplication
+                    </h3>
+                    <div className="flex items-center justify-center space-x-4">
+                      <MatrixDisplay
+                        matrix={keyMatrix}
+                        label="Key Matrix"
+                      />
+                      <span className="text-2xl">×</span>
+                      <div className="flex flex-col items-center">
+                        <span className="text-sm text-gray-600 mb-2">Number Vector</span>
+                        <div className="border-2 border-blue-500 p-2 rounded-lg">
+                          {numericalBlocks[currentBlockIndex].map((num, i) => (
+                            <div key={i} className="w-10 h-10 flex items-center justify-center">
+                              {num}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <span className="text-2xl">=</span>
+                      <div className="flex flex-col items-center">
+                        <span className="text-sm text-gray-600 mb-2">Raw Result</span>
+                        <div className="border-2 border-blue-500 p-2 rounded-lg">
+                          {encryptedBlocks[currentBlockIndex].map((num, i) => {
+                            // Calculate raw result before mod 26
+                            const rawResult = numericalBlocks[currentBlockIndex].reduce(
+                              (sum, val, j) => sum + keyMatrix[i][j] * val,
+                              0
+                            );
+                            return (
+                              <div key={i} className="w-10 h-10 flex items-center justify-center">
+                                {rawResult}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <span className="text-2xl">=</span>
+                      <div className="flex flex-col items-center">
+                        <span className="text-sm text-gray-600 mb-2">Result (mod 26)</span>
+                        <div className="border-2 border-green-500 p-2 rounded-lg">
+                          {encryptedBlocks[currentBlockIndex].map((num, i) => (
+                            <div key={i} className="w-10 h-10 flex items-center justify-center">
+                              {num}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {currentBlockStep === 3 && (
+                  <motion.div
+                    key="result"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="bg-white p-6 rounded-lg shadow-md"
+                  >
+                    <h3 className="text-xl font-semibold text-blue-700 mb-4">
+                      Block Result
+                    </h3>
+                    <div className="flex flex-wrap justify-center gap-4">
                       {encryptedBlocks[currentBlockIndex].map((num, i) => (
-                        <div key={i} className="w-10 h-10 flex items-center justify-center">
-                          {num}
+                        <div key={i} className="flex flex-col items-center">
+                          <div className="w-16 h-16 flex flex-col items-center justify-center bg-green-100 rounded-lg border-2 border-green-200">
+                            <div className="text-lg">{numberToLetter(num)}</div>
+                            <div className="text-xs text-gray-500">{num}</div>
+                          </div>
                         </div>
                       ))}
                     </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {currentBlockStep === 3 && (
-              <motion.div
-                key="result"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="bg-white p-6 rounded-lg shadow-md"
-              >
-                <h3 className="text-xl font-semibold text-blue-700 mb-4">
-                  Block Result
-                </h3>
-                <BlockDisplay
-                  block={encryptedBlocks[currentBlockIndex].map(numberToLetter)}
-                  label="Encrypted Block"
-                  isAnimated
-                />
-              </motion.div>
+                  </motion.div>
+                )}
+              </>
             )}
           </AnimatePresence>
 
           <ResultDisplay
             encryptedBlocks={encryptedBlocks.map(block => block.map(numberToLetter))}
             currentBlockIndex={currentBlockIndex}
+            currentBlockStep={currentBlockStep}
           />
         </div>
       </div>
