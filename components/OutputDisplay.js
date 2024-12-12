@@ -18,6 +18,9 @@ const OutputDisplay = ({ text, originalText, cipher, keys }) => {
       router.push(`/visualize/vigenere?text=${encodeURIComponent(originalText)}&key=${keys.key1}`);
     } else if (cipher === 'playfair') {
       router.push(`/visualize/playfair?text=${encodeURIComponent(originalText)}&key=${keys.key1}`);
+    } else if (cipher === 'hill') { 
+      const keyMatrixString = encodeURIComponent(JSON.stringify(keys.key1));
+      router.push(`/visualize/hill?text=${encodeURIComponent(originalText)}&key=${keyMatrixString}`);
     }
   };
 
@@ -36,7 +39,7 @@ const OutputDisplay = ({ text, originalText, cipher, keys }) => {
       </div>
       <div className="mt-4 flex justify-end space-x-3">
         {(cipher === 'additive' || cipher === 'multiplicative' || cipher === 'affine' || 
-          cipher === 'autokey' || cipher === 'vigenere' || cipher === 'playfair') && (
+          cipher === 'autokey' || cipher === 'vigenere' || cipher === 'playfair' || cipher === 'hill') && (
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
