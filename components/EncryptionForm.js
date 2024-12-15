@@ -94,21 +94,27 @@ const EncryptionForm = () => {
       switch (cipher) {
         case 'additive':
           encryptedText = additiveEncrypt(message, parseInt(keys.key1));
+          setResult(encryptedText);
           break;
         case 'multiplicative':
           encryptedText = multiplicativeEncrypt(message, parseInt(keys.key1));
+          setResult(encryptedText);
           break;
         case 'affine':
           encryptedText = affineEncrypt(message, parseInt(keys.key1), parseInt(keys.key2));
+          setResult(encryptedText);
           break;
         case 'autokey':
           encryptedText = autokeyEncrypt(message, keys.key1);
+          setResult(encryptedText);
           break;
         case 'playfair':
           encryptedText = playfairEncrypt(message, keys.key1);
+          setResult(encryptedText);
           break;
         case 'vigenere':
           encryptedText = vigenereEncrypt(message, keys.key1);
+          setResult(encryptedText);
           break;
         case 'hill':
           const matrixSize = parseInt(keys.matrixSize);
