@@ -38,6 +38,11 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
     transition-all duration-300 text-sm sm:text-base font-medium \
     placeholder:text-blue-300 relative z-10";
 
+  // For Rail fence cipher, return null to remove the gap
+  if (cipher === 'railfence') {
+    return null;
+  }
+
   if (cipher === 'affine') {
     return (
       <div className="grid grid-cols-2 gap-4">
@@ -58,6 +63,19 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
           className={inputClassName}
         />
       </div>
+    );
+  }
+
+  if (cipher === 'keylessTransformation') {
+    return (
+      <input
+        type="number"
+        min="2"
+        className={inputClassName}
+        value={keys.key1}
+        onChange={(e) => setKeys({ ...keys, key1: e.target.value })}
+        placeholder="Enter number of columns"
+      />
     );
   }
 

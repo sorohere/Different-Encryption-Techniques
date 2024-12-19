@@ -13,6 +13,8 @@ import { encrypt as affineEncrypt } from '../utils/affineCipher';
 import { encrypt as autokeyEncrypt } from '../utils/autokeyCipher';
 import { encrypt as playfairEncrypt } from '../utils/playfairCipher';
 import { encrypt as vigenereEncrypt } from '../utils/vigenereCipher';
+import { encrypt as railFenceEncrypt } from '../utils/railFenceCipher';
+import { encrypt as keylessTransformationEncrypt } from '../utils/keylessTransformationCipher';
 
 const ciphers = [
   'additive',
@@ -21,7 +23,9 @@ const ciphers = [
   'autokey',
   'playfair',
   'vigenere',
-  'hill'
+  'hill',
+  'railfence',
+  'keylessTransformation'
 ];
 
 const EncryptionForm = () => {
@@ -86,6 +90,11 @@ const EncryptionForm = () => {
         toast.error('Please enter a key');
         return;
       }
+    } else if (cipher === 'keylessTransformation') {
+      if (!keys.key1 || isNaN(keys.key1) || parseInt(keys.key1) < 2) {
+        toast.error('Please enter a valid number of columns (minimum 2)');
+        return;
+      }
     }
 
     // If all validations pass, proceed with encryption
@@ -121,6 +130,14 @@ const EncryptionForm = () => {
           const keyMatrix = JSON.parse(keys.key1);
           encryptedText = hillCipherEncrypt(message, keyMatrix);
           setKeyMatrix(keyMatrix);
+          setResult(encryptedText);
+          break;
+        case 'railfence':
+          encryptedText = railFenceEncrypt(message);
+          setResult(encryptedText);
+          break;
+        case 'keylessTransformation':
+          encryptedText = keylessTransformationEncrypt(message, parseInt(keys.key1));
           setResult(encryptedText);
           break;
         default:
@@ -182,12 +199,14 @@ const EncryptionForm = () => {
               />
             </motion.div>
 
-            <motion.div className="space-y-2">
-              <label className="block text-sm font-semibold mb-2 text-blue-800">
-                Enter Key
-              </label>
-              <KeyInput cipher={cipher} keys={keys} setKeys={setKeys} />
-            </motion.div>
+            {cipher !== 'railfence' && (
+              <motion.div className="space-y-2">
+                <label className="block text-sm font-semibold mb-2 text-blue-800">
+                  {cipher === 'keylessTransformation' ? 'Enter number of columns' : 'Enter Key'}
+                </label>
+                <KeyInput cipher={cipher} keys={keys} setKeys={setKeys} />
+              </motion.div>
+            )}
 
             <motion.button
               onClick={handleEncrypt}
