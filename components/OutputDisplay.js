@@ -24,6 +24,8 @@ const OutputDisplay = ({ text, originalText, cipher, keys }) => {
       router.push(`/visualize/hill?text=${encodeURIComponent(originalText)}&key=${keyMatrixString}`);
     } else if (cipher === 'railfence') {
       router.push(`/visualize/railfence?text=${encodeURIComponent(originalText)}`);
+    } else if (cipher === 'keylessTransformation') {
+      router.push(`/visualize/keylessTransformation?text=${encodeURIComponent(originalText)}&columns=${keys.key1}`);
     }
   };
 
@@ -42,7 +44,8 @@ const OutputDisplay = ({ text, originalText, cipher, keys }) => {
       </div>
       <div className="mt-4 flex justify-end space-x-3">
         {(cipher === 'additive' || cipher === 'multiplicative' || cipher === 'affine' || 
-          cipher === 'autokey' || cipher === 'vigenere' || cipher === 'playfair' || cipher === 'hill' || cipher === 'railfence') && (
+          cipher === 'autokey' || cipher === 'vigenere' || cipher === 'playfair' || cipher === 'hill' || 
+          cipher === 'railfence' || cipher === 'keylessTransformation') && (
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

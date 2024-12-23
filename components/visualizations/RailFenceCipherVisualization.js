@@ -167,7 +167,7 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
           <div className="grid grid-cols-2 gap-8">
             {/* Even positions - First line */}
             <div className="space-y-8">
-              <p className="text-sm text-gray-600">Even positions:</p>
+              <p className="text-sm text-gray-600">Odd positions:</p>
               <div className="flex flex-wrap gap-2">
                 {text.split('').slice(0, firstTwoLinesCount).map((char, idx) => {
                   if (idx % 2 !== 0) return null;
@@ -188,7 +188,7 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
 
             {/* Odd positions - Second line */}
             <div className="space-y-8">
-              <p className="text-sm text-gray-600">Odd positions:</p>
+              <p className="text-sm text-gray-600">Even positions:</p>
               <div className="flex flex-wrap gap-2">
                 {text.split('').slice(0, firstTwoLinesCount).map((char, idx) => {
                   if (idx % 2 !== 1) return null;
@@ -285,7 +285,7 @@ const ResultDisplay = ({ evenChars, oddChars }) => {
 
   return (
     <div className="mb-8">
-      <h3 className="text-lg font-semibold text-blue-800 mb-4">Step 3: Combining Even and Odd Positions</h3>
+      <h3 className="text-lg font-semibold text-blue-800 mb-4">Step 3: Combining Odd and Even Positions</h3>
       <div className="relative min-h-[160px] bg-green-50 rounded-lg p-4 overflow-hidden">
         <div className="absolute w-full">
           {animationState === 'separate' ? (
@@ -355,7 +355,7 @@ const ResultDisplay = ({ evenChars, oddChars }) => {
       </div>
       <div className="mt-4 text-sm text-gray-600">
         <p className="text-center">
-          {animationState === 'separate' ? 'Showing even and odd position strings separately...' : 'Combined into final ciphertext'}
+          {animationState === 'separate' ? 'Showing odd and even position strings separately...' : 'Combined into final ciphertext'}
         </p>
       </div>
     </div>
