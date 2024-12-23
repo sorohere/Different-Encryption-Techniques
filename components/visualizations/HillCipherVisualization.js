@@ -336,6 +336,29 @@ const HillCipherVisualization = () => {
               />
             </div>
           </div>
+          <div className="flex justify-center items-center space-x-4 my-6">
+            <button
+              onClick={handleStepBackward}
+              disabled={currentBlockIndex === 0 && currentBlockStep === 0}
+              className={`p-2 rounded-lg transition-colors flex items-center space-x-2
+                ${currentBlockIndex === 0 && currentBlockStep === 0 
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                  : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+            >
+              <BackwardIcon />
+            </button>
+
+            <button
+              onClick={handleStepForward}
+              disabled={currentBlockIndex === textBlocks.length - 1 && currentBlockStep === 3}
+              className={`p-2 rounded-lg transition-colors flex items-center space-x-2
+                ${currentBlockIndex === textBlocks.length - 1 && currentBlockStep === 3 
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                  : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+            >
+              <ForwardIcon />
+            </button>
+          </div>
 
           <AnimatePresence mode="wait">
             {showVisualization && (

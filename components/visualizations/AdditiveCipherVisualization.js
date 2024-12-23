@@ -88,54 +88,6 @@ const AdditiveCipherVisualization = () => {
         Additive Cipher Visualization
       </h2>
 
-      <div className="flex justify-center items-center space-x-4 mb-8">
-        <button
-          onClick={handleStepBackward}
-          disabled={currentStep === 0}
-          className={`p-2 rounded-lg transition-colors flex items-center space-x-2
-            ${currentStep === 0 
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-              : 'bg-blue-600 text-white hover:bg-blue-700'}`}
-        >
-          <BackwardIcon />
-        </button>
-
-        <button
-          onClick={handlePlayPause}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
-            transition-colors flex items-center space-x-2"
-        >
-          {isPlaying ? (
-            <>
-              <PauseIcon /> <span>Pause</span>
-            </>
-          ) : (
-            <>
-              <PlayIcon /> <span>Play</span>
-            </>
-          )}
-        </button>
-
-        <button
-          onClick={handleStepForward}
-          disabled={currentStep === steps.length - 1}
-          className={`p-2 rounded-lg transition-colors flex items-center space-x-2
-            ${currentStep === steps.length - 1 
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-              : 'bg-blue-600 text-white hover:bg-blue-700'}`}
-        >
-          <ForwardIcon />
-        </button>
-
-        <button
-          onClick={handleReset}
-          className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 
-            transition-colors flex items-center space-x-2"
-        >
-          <ResetIcon /> <span>Reset</span>
-        </button>
-      </div>
-
       <div className="grid grid-cols-1 gap-6">
         <div className="bg-white/50 p-6 rounded-xl">
           <h3 className="text-lg font-semibold mb-4 text-blue-800">Input</h3>
@@ -151,6 +103,54 @@ const AdditiveCipherVisualization = () => {
               <p className="font-mono bg-blue-50 p-2 rounded">{key}</p>
             </div>
           </div>
+        </div>
+
+        <div className="flex justify-center items-center space-x-4">
+          <button
+            onClick={handleStepBackward}
+            disabled={currentStep === 0}
+            className={`p-2 rounded-lg transition-colors flex items-center space-x-2
+              ${currentStep === 0 
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+          >
+            <BackwardIcon />
+          </button>
+
+          <button
+            onClick={handlePlayPause}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+              transition-colors flex items-center space-x-2"
+          >
+            {isPlaying ? (
+              <>
+                <PauseIcon /> <span>Pause</span>
+              </>
+            ) : (
+              <>
+                <PlayIcon /> <span>Play</span>
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={handleStepForward}
+            disabled={currentStep === steps.length - 1}
+            className={`p-2 rounded-lg transition-colors flex items-center space-x-2
+              ${currentStep === steps.length - 1 
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+          >
+            <ForwardIcon />
+          </button>
+
+          <button
+            onClick={handleReset}
+            className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 
+              transition-colors flex items-center space-x-2"
+          >
+            <ResetIcon /> <span>Reset</span>
+          </button>
         </div>
 
         <div className="bg-white/50 p-6 rounded-xl">
@@ -179,8 +179,7 @@ const AdditiveCipherVisualization = () => {
                     className={`w-8 h-8 flex items-center justify-center rounded 
                       ${index === currentStep ? 'bg-green-500 text-white' : 'bg-blue-50'}`}
                   >
-                    {index <= currentStep ? step.shifted : '?'}
-                  </motion.div>
+                    {index <= currentStep ? step.shifted : '?'}</motion.div>
                 ))}
               </div>
             </div>

@@ -167,9 +167,9 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
           <div className="grid grid-cols-2 gap-8">
             {/* Even positions - First line */}
             <div className="space-y-8">
-              <p className="text-sm text-gray-600">Odd positions:</p>
+              <p className="text-sm text-gray-600">Even positions:</p>
               <div className="flex flex-wrap gap-2">
-                {text.split('').slice(0, firstTwoLinesCount).map((char, idx) => {
+                {text.split('').map((char, idx) => {
                   if (idx % 2 !== 0) return null;
                   return (
                     <motion.div
@@ -188,9 +188,9 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
 
             {/* Odd positions - Second line */}
             <div className="space-y-8">
-              <p className="text-sm text-gray-600">Even positions:</p>
+              <p className="text-sm text-gray-600">Odd positions:</p>
               <div className="flex flex-wrap gap-2">
-                {text.split('').slice(0, firstTwoLinesCount).map((char, idx) => {
+                {text.split('').map((char, idx) => {
                   if (idx % 2 !== 1) return null;
                   return (
                     <motion.div
@@ -207,63 +207,6 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
               </div>
             </div>
           </div>
-
-          {/* Wrapped content in 3rd and 4th lines */}
-          {text.length > firstTwoLinesCount && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ 
-                opacity: showWrapped ? 1 : 0,
-                y: showWrapped ? 0 : -20
-              }}
-              transition={{ duration: 0.5 }}
-              className="grid grid-cols-2 gap-8 mt-16"
-            >
-              {/* Even positions - Third line */}
-              <div className="space-y-8">
-                <p className="text-sm text-gray-600">Wrapped even positions:</p>
-                <div className="flex flex-wrap gap-2">
-                  {text.split('').slice(firstTwoLinesCount).map((char, idx) => {
-                    const actualIdx = idx + firstTwoLinesCount;
-                    if (actualIdx % 2 !== 0) return null;
-                    return (
-                      <motion.div
-                        key={actualIdx}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: idx * 0.1 }}
-                        className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded shadow"
-                      >
-                        {char}
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Odd positions - Fourth line */}
-              <div className="space-y-8">
-                <p className="text-sm text-gray-600">Wrapped odd positions:</p>
-                <div className="flex flex-wrap gap-2">
-                  {text.split('').slice(firstTwoLinesCount).map((char, idx) => {
-                    const actualIdx = idx + firstTwoLinesCount;
-                    if (actualIdx % 2 !== 1) return null;
-                    return (
-                      <motion.div
-                        key={actualIdx}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: idx * 0.1 }}
-                        className="w-8 h-8 flex items-center justify-center bg-purple-100 rounded shadow"
-                      >
-                        {char}
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            </motion.div>
-          )}
         </div>
       </div>
     </div>
@@ -271,7 +214,7 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
 };
 
 const ResultDisplay = ({ evenChars, oddChars }) => {
-  const [animationState, setAnimationState] = useState('separate'); // separate -> combined
+  const [animationState, setAnimationState] = useState('separate'); 
 
   useEffect(() => {
     const timer = setTimeout(() => {
