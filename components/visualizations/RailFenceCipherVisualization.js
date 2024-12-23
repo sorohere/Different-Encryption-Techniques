@@ -120,87 +120,247 @@ const InputTextDisplay = ({ text }) => (
   </div>
 );
 
-const SeparationDisplay = ({ text, evenChars, oddChars }) => (
-  <div className="mb-8">
-    <h3 className="text-lg font-semibold text-blue-800 mb-4">Step 2: Separating Even and Odd Positions</h3>
-    <div className="space-y-12"> 
-      <div>
-        <p className="text-sm text-gray-600 mb-16">Original positions:</p> 
-        <div className="flex flex-wrap gap-2 relative"> 
-          {text.split('').map((char, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ y: 0 }}
-              animate={{ 
-                y: idx % 2 === 0 ? -20 : 20, 
-                backgroundColor: idx % 2 === 0 ? '#bfdbfe' : '#ddd6fe'
-              }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="w-8 h-8 flex items-center justify-center bg-white rounded shadow"
-            >
-              {char}
-            </motion.div>
-          ))}
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-8 mt-8">
-        <div>
-          <p className="text-sm text-gray-600 mb-4">Even positions:</p>
-          <div className="flex flex-wrap gap-2">
-            {evenChars.split('').map((char, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded shadow"
-              >
-                {char}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-        <div>
-          <p className="text-sm text-gray-600 mb-4">Odd positions:</p>
-          <div className="flex flex-wrap gap-2">
-            {oddChars.split('').map((char, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="w-8 h-8 flex items-center justify-center bg-purple-100 rounded shadow"
-              >
-                {char}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+const SeparationDisplay = ({ text, evenChars, oddChars }) => {
+  const [showWrapped, setShowWrapped] = useState(false);
 
-const ResultDisplay = ({ evenChars, oddChars }) => (
-  <div className="mb-8">
-    <h3 className="text-lg font-semibold text-blue-800 mb-4">Step 3: Final Encrypted Text</h3>
-    <div className="flex flex-wrap gap-2 p-4 bg-green-50 rounded-lg">
-      {(evenChars + oddChars).split('').map((char, idx) => (
-        <motion.div
-          key={idx}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, delay: idx * 0.1 }}
-          className={`w-8 h-8 flex items-center justify-center rounded shadow ${
-            idx < evenChars.length ? 'bg-blue-100' : 'bg-purple-100'
-          }`}
-        >
-          {char}
-        </motion.div>
-      ))}
+  // Calculate how many characters can fit in first two lines (should be even)
+  const charsPerLine = 8; // This can be adjusted based on screen size
+  const firstTwoLinesCount = Math.floor(charsPerLine / 2) * 4; // Ensure even number for both lines
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowWrapped(true);
+    }, 1500); // Show wrapped content after initial separation
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="mb-8">
+      <h3 className="text-lg font-semibold text-blue-800 mb-4">Step 2: Separating Even and Odd Positions</h3>
+      <div className="space-y-24">
+        <div>
+          <p className="text-sm text-gray-600 mb-16">Original positions:</p>
+          <div className="flex flex-wrap gap-y-16 gap-x-2 relative">
+            {text.split('').map((char, idx) => {
+              const row = Math.floor(idx / Math.floor((window.innerWidth - 64) / 40));
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ y: 0 }}
+                  animate={{
+                    y: row % 2 === 0 ? (idx % 2 === 0 ? -20 : 20) : (idx % 2 === 0 ? 20 : -20),
+                    backgroundColor: idx % 2 === 0 ? '#bfdbfe' : '#ddd6fe'
+                  }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  className="w-8 h-8 flex items-center justify-center bg-white rounded shadow"
+                >
+                  {char}
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="space-y-8">
+          {/* First two lines */}
+          <div className="grid grid-cols-2 gap-8">
+            {/* Even positions - First line */}
+            <div className="space-y-8">
+              <p className="text-sm text-gray-600">Even positions:</p>
+              <div className="flex flex-wrap gap-2">
+                {text.split('').slice(0, firstTwoLinesCount).map((char, idx) => {
+                  if (idx % 2 !== 0) return null;
+                  return (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5, delay: idx * 0.1 }}
+                      className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded shadow"
+                    >
+                      {char}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Odd positions - Second line */}
+            <div className="space-y-8">
+              <p className="text-sm text-gray-600">Odd positions:</p>
+              <div className="flex flex-wrap gap-2">
+                {text.split('').slice(0, firstTwoLinesCount).map((char, idx) => {
+                  if (idx % 2 !== 1) return null;
+                  return (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5, delay: idx * 0.1 }}
+                      className="w-8 h-8 flex items-center justify-center bg-purple-100 rounded shadow"
+                    >
+                      {char}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Wrapped content in 3rd and 4th lines */}
+          {text.length > firstTwoLinesCount && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ 
+                opacity: showWrapped ? 1 : 0,
+                y: showWrapped ? 0 : -20
+              }}
+              transition={{ duration: 0.5 }}
+              className="grid grid-cols-2 gap-8 mt-16"
+            >
+              {/* Even positions - Third line */}
+              <div className="space-y-8">
+                <p className="text-sm text-gray-600">Wrapped even positions:</p>
+                <div className="flex flex-wrap gap-2">
+                  {text.split('').slice(firstTwoLinesCount).map((char, idx) => {
+                    const actualIdx = idx + firstTwoLinesCount;
+                    if (actualIdx % 2 !== 0) return null;
+                    return (
+                      <motion.div
+                        key={actualIdx}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5, delay: idx * 0.1 }}
+                        className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded shadow"
+                      >
+                        {char}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Odd positions - Fourth line */}
+              <div className="space-y-8">
+                <p className="text-sm text-gray-600">Wrapped odd positions:</p>
+                <div className="flex flex-wrap gap-2">
+                  {text.split('').slice(firstTwoLinesCount).map((char, idx) => {
+                    const actualIdx = idx + firstTwoLinesCount;
+                    if (actualIdx % 2 !== 1) return null;
+                    return (
+                      <motion.div
+                        key={actualIdx}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5, delay: idx * 0.1 }}
+                        className="w-8 h-8 flex items-center justify-center bg-purple-100 rounded shadow"
+                      >
+                        {char}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+const ResultDisplay = ({ evenChars, oddChars }) => {
+  const [animationState, setAnimationState] = useState('separate'); // separate -> combined
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimationState('combined');
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const combinedString = evenChars + oddChars;
+
+  return (
+    <div className="mb-8">
+      <h3 className="text-lg font-semibold text-blue-800 mb-4">Step 3: Combining Even and Odd Positions</h3>
+      <div className="relative min-h-[160px] bg-green-50 rounded-lg p-4 overflow-hidden">
+        <div className="absolute w-full">
+          {animationState === 'separate' ? (
+            <div className="flex flex-col gap-6">
+              {/* First string (even positions) */}
+              <div className="flex flex-wrap gap-2">
+                {evenChars.split('').map((char, idx) => (
+                  <motion.div
+                    key={`even-${idx}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                    className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded shadow"
+                  >
+                    {char}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Second string (odd positions) */}
+              <div className="flex flex-wrap gap-2">
+                {oddChars.split('').map((char, idx) => (
+                  <motion.div
+                    key={`odd-${idx}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                    className="w-8 h-8 flex items-center justify-center bg-purple-100 rounded shadow"
+                  >
+                    {char}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="flex flex-wrap gap-2"
+            >
+              {combinedString.split('').map((char, idx) => (
+                <motion.div
+                  key={`combined-${idx}`}
+                  initial={{ 
+                    y: idx >= evenChars.length ? 48 : 0,
+                    opacity: 0 
+                  }}
+                  animate={{ 
+                    y: 0,
+                    opacity: 1 
+                  }}
+                  transition={{ 
+                    duration: 0.5,
+                    delay: idx * 0.05 
+                  }}
+                  className={`w-8 h-8 flex items-center justify-center rounded shadow ${
+                    idx < evenChars.length ? 'bg-blue-100' : 'bg-purple-100'
+                  }`}
+                >
+                  {char}
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+        </div>
+      </div>
+      <div className="mt-4 text-sm text-gray-600">
+        <p className="text-center">
+          {animationState === 'separate' ? 'Showing even and odd position strings separately...' : 'Combined into final ciphertext'}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 const RailFenceCipherVisualization = () => {
   const router = useRouter();
