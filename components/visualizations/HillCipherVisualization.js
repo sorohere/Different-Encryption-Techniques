@@ -35,10 +35,12 @@ const multiplyMatrices = (keyMatrix, block) => {
 // Child Components
 const VisualizationHeader = ({ onClose }) => (
   <div className="flex justify-between items-center">
-    <h2 className="text-2xl font-bold text-blue-800">Hill Cipher Visualization</h2>
+    <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 text-transparent bg-clip-text">
+      Hill Cipher Visualization
+    </h2>
     <button
       onClick={onClose}
-      className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
+      className="p-2 text-violet-600 hover:text-violet-800 transition-colors"
       aria-label="Close visualization"
     >
       <CloseIcon />
@@ -55,36 +57,53 @@ const Controls = ({
   canStepBackward,
   canStepForward,
 }) => (
-  <div className="flex justify-center items-center space-x-4 mb-8">
+  <div className="flex justify-center items-center space-x-4 mt-6">
     <button
       onClick={onStepBackward}
       disabled={!canStepBackward}
-      className={`p-2 rounded-lg transition-colors ${
-        !canStepBackward ? 'bg-gray-300 text-gray-500' : 'bg-blue-500 text-white hover:bg-blue-600'
+      className={`p-2 rounded-lg transition-all flex items-center space-x-2 ${
+        !canStepBackward 
+          ? 'bg-gray-200 text-gray-400' 
+          : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600'
       }`}
     >
       <BackwardIcon />
     </button>
+
     <button
       onClick={onPlayPause}
-      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+      className="px-6 py-2 bg-gradient-to-r from-violet-500 to-indigo-500 text-white rounded-lg 
+        hover:from-violet-600 hover:to-indigo-600 transition-all flex items-center space-x-2"
     >
-      {isPlaying ? <PauseIcon /> : <PlayIcon />}
+      {isPlaying ? (
+        <>
+          <PauseIcon /> <span>Pause</span>
+        </>
+      ) : (
+        <>
+          <PlayIcon /> <span>Play</span>
+        </>
+      )}
     </button>
+
     <button
       onClick={onStepForward}
       disabled={!canStepForward}
-      className={`p-2 rounded-lg transition-colors ${
-        !canStepForward ? 'bg-gray-300 text-gray-500' : 'bg-blue-500 text-white hover:bg-blue-600'
+      className={`p-2 rounded-lg transition-all flex items-center space-x-2 ${
+        !canStepForward 
+          ? 'bg-gray-200 text-gray-400' 
+          : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600'
       }`}
     >
       <ForwardIcon />
     </button>
+
     <button
       onClick={onReset}
-      className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+      className="px-6 py-2 bg-gradient-to-r from-violet-500 to-indigo-500 text-white rounded-lg 
+        hover:from-violet-600 hover:to-indigo-600 transition-all flex items-center space-x-2"
     >
-      <ResetIcon />
+      <ResetIcon /> <span>Reset</span>
     </button>
   </div>
 );
@@ -93,9 +112,9 @@ const MatrixDisplay = ({ matrix, label, highlight }) => {
   if (!Array.isArray(matrix) || !matrix.length || !Array.isArray(matrix[0])) {
     return (
       <div className="flex flex-col items-center m-2">
-        <span className="text-sm text-gray-600 mb-2">{label}</span>
-        <div className="border-2 border-red-500 p-4 rounded-lg">
-          <span className="text-red-500">Invalid Matrix</span>
+        <span className="text-sm text-violet-600 mb-2">{label}</span>
+        <div className="border-2 border-violet-200 p-4 rounded-lg">
+          <span className="text-violet-500">Invalid Matrix</span>
         </div>
     </div>
     );
@@ -103,8 +122,8 @@ const MatrixDisplay = ({ matrix, label, highlight }) => {
 
   return (
     <div className="flex flex-col items-center m-2">
-      <span className="text-sm text-gray-600 mb-2">{label}</span>
-      <div className="border-2 border-blue-500 p-2 rounded-lg">
+      <span className="text-sm text-violet-600 mb-2">{label}</span>
+      <div className="border-2 border-violet-200 p-2 rounded-lg">
         {matrix.map((row, i) => (
           <div key={i} className="flex">
             {row.map((cell, j) => (
@@ -131,7 +150,7 @@ const BlockDisplay = ({ block, label, isAnimated = false, highlightIndex = -1 })
     initial={isAnimated ? { opacity: 0, y: 20 } : false}
     animate={isAnimated ? { opacity: 1, y: 0 } : false}
   >
-    <span className="text-sm text-gray-600 mb-2">{label}</span>
+    <span className="text-sm text-violet-600 mb-2">{label}</span>
     <div className="flex space-x-2">
       {block.map((char, i) => (
         <div
@@ -178,16 +197,16 @@ const ResultDisplay = ({ encryptedBlocks, currentBlockIndex, currentBlockStep })
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-semibold text-blue-700 mb-4">Final Result</h3>
+    <div className="bg-white/80 p-6 rounded-lg shadow-md border border-violet-200">
+      <h3 className="text-xl font-semibold text-violet-700 mb-4">Final Result</h3>
       <div className="flex flex-wrap justify-center gap-4">
         {encryptedBlocks.map((block, blockIndex) => (
           <div key={blockIndex} className="flex space-x-2">
             {block.map((char, charIndex) => (
               <div
                 key={charIndex}
-                className={`w-10 h-10 flex items-center justify-center rounded-md
-                  ${shouldShowBlock(blockIndex) ? 'bg-green-100' : 'bg-gray-100'}`}
+                className={`w-10 h-10 flex items-center justify-center rounded-lg
+                  ${shouldShowBlock(blockIndex) ? 'bg-gradient-to-br from-violet-500 to-indigo-500 text-white' : 'bg-white border border-violet-200'}`}
               >
                 {shouldShowBlock(blockIndex) ? char : '?'}
               </div>
@@ -303,7 +322,7 @@ const HillCipherVisualization = () => {
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="bg-gradient-to-br from-violet-50/90 via-indigo-50/90 to-blue-50/90 rounded-xl shadow-lg p-6 border border-violet-200">
         <div className="mb-8">
           <VisualizationHeader onClose={handleClose} />
           
@@ -319,11 +338,11 @@ const HillCipherVisualization = () => {
         </div>
 
         <div className="space-y-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold text-blue-700 mb-4">Input</h3>
+          <div className="bg-white/80 p-6 rounded-lg shadow-md border border-violet-200">
+            <h3 className="text-xl font-semibold text-violet-700 mb-4">Input</h3>
             <div className="flex justify-center items-center space-x-8">
               <div className="flex flex-col items-center">
-                <span className="text-sm text-gray-600 mb-2">Prepared Text</span>
+                <span className="text-sm text-violet-600 mb-2">Prepared Text</span>
                 <InputDisplay
                   text={preparedText}
                   blockSize={size}
@@ -336,29 +355,6 @@ const HillCipherVisualization = () => {
               />
             </div>
           </div>
-          <div className="flex justify-center items-center space-x-4 my-6">
-            <button
-              onClick={handleStepBackward}
-              disabled={currentBlockIndex === 0 && currentBlockStep === 0}
-              className={`p-2 rounded-lg transition-colors flex items-center space-x-2
-                ${currentBlockIndex === 0 && currentBlockStep === 0 
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                  : 'bg-blue-600 text-white hover:bg-blue-700'}`}
-            >
-              <BackwardIcon />
-            </button>
-
-            <button
-              onClick={handleStepForward}
-              disabled={currentBlockIndex === textBlocks.length - 1 && currentBlockStep === 3}
-              className={`p-2 rounded-lg transition-colors flex items-center space-x-2
-                ${currentBlockIndex === textBlocks.length - 1 && currentBlockStep === 3 
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                  : 'bg-blue-600 text-white hover:bg-blue-700'}`}
-            >
-              <ForwardIcon />
-            </button>
-          </div>
 
           <AnimatePresence mode="wait">
             {showVisualization && (
@@ -369,9 +365,9 @@ const HillCipherVisualization = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="bg-white p-6 rounded-lg shadow-md"
+                    className="bg-white/80 p-6 rounded-lg shadow-md border border-violet-200"
                   >
-                    <h3 className="text-xl font-semibold text-blue-700 mb-4">
+                    <h3 className="text-xl font-semibold text-violet-700 mb-4">
                       Block {currentBlockIndex + 1}: Text Division
                     </h3>
                     <BlockDisplay
@@ -389,21 +385,21 @@ const HillCipherVisualization = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="bg-white p-6 rounded-lg shadow-md"
+                    className="bg-white/80 p-6 rounded-lg shadow-md border border-violet-200"
                   >
-                    <h3 className="text-xl font-semibold text-blue-700 mb-4">
+                    <h3 className="text-xl font-semibold text-violet-700 mb-4">
                       Numerical Conversion
                     </h3>
                     <div className="flex flex-wrap justify-center gap-4">
                       {Array.from(textBlocks[currentBlockIndex] || '').map((char, i) => (
                         <div key={i} className="flex flex-col items-center">
-                          <div className="w-12 h-12 flex items-center justify-center bg-blue-100 rounded-t-lg border-t-2 border-x-2 border-blue-200">
+                          <div className="w-12 h-12 flex items-center justify-center bg-violet-100 rounded-t-lg border-t-2 border-x-2 border-violet-200">
                             {char}
                           </div>
-                          <div className="w-12 h-12 flex items-center justify-center bg-green-100 rounded-b-lg border-b-2 border-x-2 border-green-200">
+                          <div className="w-12 h-12 flex items-center justify-center bg-indigo-100 rounded-b-lg border-b-2 border-x-2 border-indigo-200">
                             {letterToNumber(char)}
                           </div>
-                          <div className="text-sm text-gray-500 mt-1">
+                          <div className="text-sm text-violet-600 mt-1">
                             Position
                           </div>
                         </div>
@@ -418,9 +414,9 @@ const HillCipherVisualization = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="bg-white p-6 rounded-lg shadow-md"
+                    className="bg-white/80 p-6 rounded-lg shadow-md border border-violet-200"
                   >
-                    <h3 className="text-xl font-semibold text-blue-700 mb-4">
+                    <h3 className="text-xl font-semibold text-violet-700 mb-4">
                       Matrix Multiplication
                     </h3>
                     <div className="flex items-center justify-center space-x-4">
@@ -428,10 +424,10 @@ const HillCipherVisualization = () => {
                         matrix={keyMatrix}
                         label="Key Matrix"
                       />
-                      <span className="text-2xl">×</span>
+                      <span className="text-2xl text-violet-700">×</span>
                       <div className="flex flex-col items-center">
-                        <span className="text-sm text-gray-600 mb-2">Number Vector</span>
-                        <div className="border-2 border-blue-500 p-2 rounded-lg">
+                        <span className="text-sm text-violet-600 mb-2">Number Vector</span>
+                        <div className="border-2 border-violet-300 p-2 rounded-lg bg-white/90">
                           {numericalBlocks[currentBlockIndex].map((num, i) => (
                             <div key={i} className="w-10 h-10 flex items-center justify-center">
                               {num}
@@ -439,12 +435,11 @@ const HillCipherVisualization = () => {
                           ))}
                         </div>
                       </div>
-                      <span className="text-2xl">=</span>
+                      <span className="text-2xl text-violet-700">=</span>
                       <div className="flex flex-col items-center">
-                        <span className="text-sm text-gray-600 mb-2">Raw Result</span>
-                        <div className="border-2 border-blue-500 p-2 rounded-lg">
+                        <span className="text-sm text-violet-600 mb-2">Raw Result</span>
+                        <div className="border-2 border-violet-300 p-2 rounded-lg bg-white/90">
                           {encryptedBlocks[currentBlockIndex].map((num, i) => {
-                            // Calculate raw result before mod 26
                             const rawResult = numericalBlocks[currentBlockIndex].reduce(
                               (sum, val, j) => sum + keyMatrix[i][j] * val,
                               0
@@ -457,10 +452,10 @@ const HillCipherVisualization = () => {
                           })}
                         </div>
                       </div>
-                      <span className="text-2xl">=</span>
+                      <span className="text-2xl text-violet-700">=</span>
                       <div className="flex flex-col items-center">
-                        <span className="text-sm text-gray-600 mb-2">Result (mod 26)</span>
-                        <div className="border-2 border-green-500 p-2 rounded-lg">
+                        <span className="text-sm text-violet-600 mb-2">Result (mod 26)</span>
+                        <div className="border-2 border-indigo-300 p-2 rounded-lg bg-white/90">
                           {encryptedBlocks[currentBlockIndex].map((num, i) => (
                             <div key={i} className="w-10 h-10 flex items-center justify-center">
                               {num}
@@ -478,17 +473,17 @@ const HillCipherVisualization = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="bg-white p-6 rounded-lg shadow-md"
+                    className="bg-white/80 p-6 rounded-lg shadow-md border border-violet-200"
                   >
-                    <h3 className="text-xl font-semibold text-blue-700 mb-4">
+                    <h3 className="text-xl font-semibold text-violet-700 mb-4">
                       Block Result
                     </h3>
                     <div className="flex flex-wrap justify-center gap-4">
                       {encryptedBlocks[currentBlockIndex].map((num, i) => (
                         <div key={i} className="flex flex-col items-center">
-                          <div className="w-16 h-16 flex flex-col items-center justify-center bg-green-100 rounded-lg border-2 border-green-200">
+                          <div className="w-16 h-16 flex flex-col items-center justify-center bg-gradient-to-br from-violet-100 to-indigo-100 rounded-lg border-2 border-violet-200">
                             <div className="text-lg">{numberToLetter(num)}</div>
-                            <div className="text-xs text-gray-500">{num}</div>
+                            <div className="text-xs text-violet-600">{num}</div>
                           </div>
                         </div>
                       ))}

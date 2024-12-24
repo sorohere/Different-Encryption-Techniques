@@ -34,25 +34,27 @@ const OutputDisplay = ({ text, originalText, cipher, keys }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="mt-8 p-6 bg-gradient-to-br from-blue-50 to-indigo-50/30 border-2 border-blue-100 rounded-xl"
+      className="mt-8 p-6 bg-gradient-to-br from-violet-50/80 to-blue-50/80 
+        border-2 border-violet-200 rounded-xl backdrop-blur-sm"
     >
-      <h3 className="text-xl font-semibold mb-3 text-blue-800">
+      <h3 className="text-xl font-semibold mb-3 text-violet-800">
         Encrypted Message
       </h3>
-      <div className="p-4 bg-white/80 rounded-lg border-2 border-blue-100">
-        <p className="text-blue-900 font-mono break-all tracking-wide">{text}</p>
+      <div className="p-4 bg-white/90 rounded-lg border-2 border-violet-200">
+        <p className="text-violet-900 font-mono break-all tracking-wide">{text}</p>
       </div>
       <div className="mt-4 flex justify-end space-x-3">
         {(cipher === 'additive' || cipher === 'multiplicative' || cipher === 'affine' || 
-          cipher === 'autokey' || cipher === 'vigenere' || cipher === 'playfair' || cipher === 'hill' || 
-          cipher === 'railfence' || cipher === 'keylessTransformation') && (
+          cipher === 'autokey' || cipher === 'vigenere' || cipher === 'playfair' || 
+          cipher === 'hill' || cipher === 'railfence' || 
+          cipher === 'keylessTransformation') && (
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleVisualize}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm 
-              hover:bg-indigo-700 transition-colors flex items-center gap-2
-              shadow-sm shadow-indigo-500/20"
+            className="px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 
+              text-white rounded-lg text-sm hover:from-violet-700 hover:to-indigo-700 
+              transition-all flex items-center gap-2 shadow-sm shadow-violet-500/20"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
@@ -67,9 +69,9 @@ const OutputDisplay = ({ text, originalText, cipher, keys }) => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigator.clipboard.writeText(text)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm 
-            hover:bg-blue-700 transition-colors flex items-center gap-2
-            shadow-sm shadow-blue-500/20"
+          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 
+            text-white rounded-lg text-sm hover:from-blue-700 hover:to-indigo-700 
+            transition-all flex items-center gap-2 shadow-sm shadow-blue-500/20"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 

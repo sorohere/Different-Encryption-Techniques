@@ -33,16 +33,15 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
     }
   };
 
-  const inputClassName = "w-full p-3 bg-blue-50/50 border-2 border-blue-100 \
-    text-blue-900 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent \
+  const inputClassName = "w-full p-3 bg-white/80 border-2 border-violet-200 \
+    text-violet-900 rounded-xl focus:ring-2 focus:ring-violet-400 focus:border-transparent \
     transition-all duration-300 text-sm sm:text-base font-medium \
-    placeholder:text-blue-300 relative z-10";
+    placeholder:text-violet-400 relative z-10 hover:bg-white/90";
 
-  // For Rail fence cipher, return null to remove the gap
   if (cipher === 'railfence') {
     return (
       <div className="w-full">
-        <div className="text-sm text-blue-600 font-medium">
+        <div className="text-sm text-violet-600 font-medium">
           No key required for Rail Fence cipher
         </div>
       </div>
@@ -57,7 +56,7 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
           type="text"
           value={keys.key1}
           onChange={(e) => handleIntegerInput(e, 'key1')}
-          placeholder="Key 1 (integer)"
+          placeholder="Enter first key (multiplicative)"
           className={inputClassName}
         />
         <motion.input
@@ -65,23 +64,8 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
           type="text"
           value={keys.key2}
           onChange={(e) => handleIntegerInput(e, 'key2')}
-          placeholder="Key 2 (integer)"
+          placeholder="Enter second key (additive)"
           className={inputClassName}
-        />
-      </div>
-    );
-  }
-
-  if (cipher === 'keylessTransformation') {
-    return (
-      <div className="w-full">
-        <input
-          type="number"
-          min="2"
-          className={inputClassName}
-          value={keys.key1}
-          onChange={(e) => setKeys({ ...keys, key1: e.target.value })}
-          placeholder="Enter number of columns"
         />
       </div>
     );
@@ -116,7 +100,7 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
         {keys.matrixSize && parseInt(keys.matrixSize) > 0 && (
           <div className="w-full">
             <div className="grid gap-2 w-full overflow-x-auto">
-              <label className="text-sm font-semibold text-blue-800 mb-2">
+              <label className="text-sm font-semibold text-violet-800 mb-2">
                 Enter Key Matrix:
               </label>
               <div className="inline-block min-w-full">
@@ -126,9 +110,10 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
                       <input
                         key={colIndex}
                         type="text"
-                        className="w-12 h-12 p-1 bg-blue-50/50 border-2 border-blue-100 
-                          text-blue-900 rounded-lg focus:ring-2 focus:ring-blue-400 
-                          focus:border-transparent transition-all duration-300 text-center"
+                        className="w-12 h-12 p-1 bg-white/80 border-2 border-violet-200 
+                          text-violet-900 rounded-lg focus:ring-2 focus:ring-violet-400 
+                          focus:border-transparent transition-all duration-300 text-center
+                          hover:bg-white/90"
                         value={JSON.parse(keys.key1 || '[]')[rowIndex]?.[colIndex] || ''}
                         onChange={(e) => handleMatrixInput(rowIndex, colIndex, e.target.value)}
                         placeholder="0"

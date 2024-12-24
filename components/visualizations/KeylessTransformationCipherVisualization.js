@@ -8,10 +8,12 @@ import { encrypt } from '../../utils/keylessTransformationCipher';
 // Child Components
 const VisualizationHeader = ({ onClose }) => (
   <div className="flex justify-between items-center mb-6">
-    <h2 className="text-2xl font-bold text-blue-800">Keyless Transformation Cipher Visualization</h2>
+    <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 text-transparent bg-clip-text">
+      Keyless Transformation Cipher Visualization
+    </h2>
     <button
       onClick={onClose}
-      className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
+      className="p-2 text-violet-600 hover:text-violet-800 transition-colors"
       aria-label="Close visualization"
     >
       <CloseIcon />
@@ -32,8 +34,10 @@ const Controls = ({
     <button
       onClick={onStepBackward}
       disabled={!canStepBackward}
-      className={`p-2 rounded-lg transition-colors ${
-        !canStepBackward ? 'bg-gray-300 text-gray-500' : 'bg-blue-500 text-white hover:bg-blue-600'
+      className={`p-2 rounded-lg transition-all ${
+        !canStepBackward 
+          ? 'bg-gray-200 text-gray-400' 
+          : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600'
       }`}
       aria-label="Step backward"
     >
@@ -41,7 +45,8 @@ const Controls = ({
     </button>
     <button
       onClick={onPlayPause}
-      className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+      className="p-2 bg-gradient-to-r from-violet-500 to-indigo-500 text-white rounded-lg 
+        hover:from-violet-600 hover:to-indigo-600 transition-all"
       aria-label={isPlaying ? "Pause" : "Play"}
     >
       {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -49,8 +54,10 @@ const Controls = ({
     <button
       onClick={onStepForward}
       disabled={!canStepForward}
-      className={`p-2 rounded-lg transition-colors ${
-        !canStepForward ? 'bg-gray-300 text-gray-500' : 'bg-blue-500 text-white hover:bg-blue-600'
+      className={`p-2 rounded-lg transition-all ${
+        !canStepForward 
+          ? 'bg-gray-200 text-gray-400' 
+          : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600'
       }`}
       aria-label="Step forward"
     >
@@ -58,7 +65,8 @@ const Controls = ({
     </button>
     <button
       onClick={onReset}
-      className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+      className="p-2 bg-gradient-to-r from-violet-500 to-indigo-500 text-white rounded-lg 
+        hover:from-violet-600 hover:to-indigo-600 transition-all"
       aria-label="Reset"
     >
       <ResetIcon />
@@ -68,7 +76,7 @@ const Controls = ({
 
 const GridDisplay = ({ grid, step, highlightCol }) => (
   <div className="mb-8">
-    <h3 className="text-lg font-semibold mb-4 text-gray-700">
+    <h3 className="text-lg font-semibold mb-4 text-violet-700">
       {step === 0 ? "Creating Grid" : "Reading Column by Column"}
     </h3>
     {grid.length > 0 && grid[0] && (
@@ -82,11 +90,11 @@ const GridDisplay = ({ grid, step, highlightCol }) => (
                 animate={{
                   opacity: 1,
                   scale: 1,
-                  backgroundColor: highlightCol === colIndex ? '#93C5FD' : '#FFFFFF'
+                  backgroundColor: highlightCol === colIndex ? '#DDD6FE' : '#FFFFFF'
                 }}
                 className={`w-8 h-8 flex items-center justify-center border rounded
-                  ${highlightCol === colIndex ? 'bg-blue-200' : 'bg-white'} 
-                  border-gray-300`}
+                  ${highlightCol === colIndex ? 'bg-violet-200' : 'bg-white'} 
+                  border-violet-200`}
               >
                 {char}
               </motion.div>
@@ -100,7 +108,7 @@ const GridDisplay = ({ grid, step, highlightCol }) => (
 
 const ResultDisplay = ({ result }) => (
   <div className="mb-8">
-    <h3 className="text-lg font-semibold mb-4 text-gray-700">Result</h3>
+    <h3 className="text-lg font-semibold mb-4 text-violet-700">Result</h3>
     <div className="flex flex-wrap justify-center gap-2">
       {result.split('').map((char, idx) => (
         <motion.div
@@ -108,7 +116,8 @@ const ResultDisplay = ({ result }) => (
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.1 }}
-          className="w-8 h-8 flex items-center justify-center border rounded bg-green-100 border-green-300"
+          className="w-8 h-8 flex items-center justify-center border rounded 
+            bg-gradient-to-br from-violet-100 to-blue-100 border-violet-200"
         >
           {char}
         </motion.div>
@@ -120,18 +129,18 @@ const ResultDisplay = ({ result }) => (
 const InputDisplay = ({ text, columns }) => (
   <div className="mb-8 space-y-4">
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-violet-700 mb-1">
         Plaintext Input
       </label>
-      <div className="w-full p-2 border border-gray-300 rounded-md bg-gray-50">
+      <div className="w-full p-2 border border-violet-200 rounded-md bg-white/80">
         {text}
       </div>
     </div>
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-violet-700 mb-1">
         Number of Columns
       </label>
-      <div className="w-full p-2 border border-gray-300 rounded-md bg-gray-50">
+      <div className="w-full p-2 border border-violet-200 rounded-md bg-white/80">
         {columns}
       </div>
     </div>
@@ -246,14 +255,10 @@ const KeylessTransformationCipherVisualization = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 max-w-4xl mx-auto">
+    <div className="bg-gradient-to-br from-violet-50/90 via-indigo-50/90 to-blue-50/90 
+      rounded-xl shadow-lg p-6 max-w-4xl mx-auto border border-violet-200">
       <VisualizationHeader onClose={handleClose} />
-      
-      <InputDisplay
-        text={text}
-        columns={columns}
-      />
-      
+      <InputDisplay text={text} columns={columns} />
       <Controls
         isPlaying={isPlaying}
         onPlayPause={handlePlayPause}
@@ -263,13 +268,11 @@ const KeylessTransformationCipherVisualization = () => {
         canStepBackward={currentStep > 0}
         canStepForward={currentStep <= columns}
       />
-
       <GridDisplay
         grid={grid}
         step={currentStep}
         highlightCol={highlightCol}
       />
-
       {result && <ResultDisplay result={result} />}
     </div>
   );

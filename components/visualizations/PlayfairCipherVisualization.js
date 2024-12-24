@@ -212,33 +212,33 @@ const PlayfairCipherVisualization = () => {
   };
 
   return (
-    <div className="space-y-8 relative">
-      <button
-        onClick={handleClose}
-        className="absolute top-0 right-0 p-2 text-gray-600 hover:text-gray-800 
-          transition-colors"
-        aria-label="Close visualization"
-      >
-        <CloseIcon />
-      </button>
+    <div className="bg-gradient-to-br from-violet-50/90 via-indigo-50/90 to-blue-50/90 rounded-xl shadow-lg p-6 max-w-4xl mx-auto border border-violet-200">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 text-transparent bg-clip-text">
+          Playfair Cipher Visualization
+        </h2>
+        <button
+          onClick={handleClose}
+          className="p-2 text-violet-600 hover:text-violet-800 transition-colors"
+          aria-label="Close visualization"
+        >
+          <CloseIcon />
+        </button>
+      </div>
 
-      <h2 className="text-2xl font-bold text-center text-blue-800">
-        Playfair Cipher Visualization
-      </h2>
-
-      <div className="grid grid-cols-1 gap-6">
-        <div className="bg-white/50 p-6 rounded-xl">
-          <h3 className="text-lg font-semibold mb-4 text-blue-800">Input</h3>
+      <div className="space-y-8">
+        <div className="bg-white/80 p-6 rounded-xl border border-violet-200">
+          <h3 className="text-lg font-semibold mb-4 text-violet-700">Input</h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-blue-600 mb-2">Plaintext:</p>
-              <p className="font-mono bg-blue-50 p-2 rounded break-all whitespace-pre-wrap min-h-[40px]">
+              <p className="text-sm text-violet-600 mb-2">Plaintext:</p>
+              <p className="font-mono bg-white/90 p-2 rounded border border-violet-200 break-all whitespace-pre-wrap min-h-[40px]">
                 {plaintext}
               </p>
             </div>
             <div>
-              <p className="text-sm text-blue-600 mb-2">Key:</p>
-              <p className="font-mono bg-blue-50 p-2 rounded">{key}</p>
+              <p className="text-sm text-violet-600 mb-2">Key:</p>
+              <p className="font-mono bg-white/90 p-2 rounded border border-violet-200">{key}</p>
             </div>
           </div>
         </div>
@@ -247,18 +247,19 @@ const PlayfairCipherVisualization = () => {
           <button
             onClick={handleStepBackward}
             disabled={currentStep === 0}
-            className={`p-2 rounded-lg transition-colors flex items-center space-x-2
-              ${currentStep === 0 
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+            className={`p-2 rounded-lg transition-all flex items-center space-x-2 ${
+              currentStep === 0 
+                ? 'bg-gray-200 text-gray-400' 
+                : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600'
+            }`}
           >
             <BackwardIcon />
           </button>
 
           <button
             onClick={handlePlayPause}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
-              transition-colors flex items-center space-x-2"
+            className="px-6 py-2 bg-gradient-to-r from-violet-500 to-indigo-500 text-white rounded-lg 
+              hover:from-violet-600 hover:to-indigo-600 transition-all flex items-center space-x-2"
           >
             {isPlaying ? (
               <>
@@ -274,25 +275,26 @@ const PlayfairCipherVisualization = () => {
           <button
             onClick={handleStepForward}
             disabled={currentStep === steps.length - 1}
-            className={`p-2 rounded-lg transition-colors flex items-center space-x-2
-              ${currentStep === steps.length - 1 
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+            className={`p-2 rounded-lg transition-all flex items-center space-x-2 ${
+              currentStep === steps.length - 1 
+                ? 'bg-gray-200 text-gray-400' 
+                : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600'
+            }`}
           >
             <ForwardIcon />
           </button>
 
           <button
             onClick={handleReset}
-            className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 
-              transition-colors flex items-center space-x-2"
+            className="px-6 py-2 bg-gradient-to-r from-violet-500 to-indigo-500 text-white rounded-lg 
+              hover:from-violet-600 hover:to-indigo-600 transition-all flex items-center space-x-2"
           >
             <ResetIcon /> <span>Reset</span>
           </button>
         </div>
 
-        <div className="bg-white/50 p-6 rounded-xl">
-          <h3 className="text-lg font-semibold mb-4 text-blue-800">Key Matrix (I/J share same cell)</h3>
+        <div className="bg-white/80 p-6 rounded-xl border border-violet-200">
+          <h3 className="text-lg font-semibold mb-4 text-violet-700">Key Matrix (I/J share same cell)</h3>
           <div className="flex justify-center mb-6">
             <div className="relative grid grid-cols-5 gap-1 bg-blue-100 p-1 rounded-lg">
               {[0, 1, 2, 3, 4].map(i => (
@@ -304,7 +306,7 @@ const PlayfairCipherVisualization = () => {
                         ${currentStep < steps.length && 
                           (i === steps[currentStep].positions.first.row && j === steps[currentStep].positions.first.col ||
                            i === steps[currentStep].positions.second.row && j === steps[currentStep].positions.second.col)
-                          ? 'bg-blue-500 text-white'
+                          ? 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white'
                           : 'bg-white text-blue-800'}`}
                     >
                       {matrix[i][j] === 'I' ? 'I/J' : matrix[i][j]}
@@ -380,7 +382,7 @@ const PlayfairCipherVisualization = () => {
               )}
             </div>
           </div>
-          <div className="text-center text-sm text-blue-600">
+          <div className="text-center text-sm text-violet-700">
             <p>Note: I and J share the same cell in the matrix</p>
           </div>
         </div>
@@ -390,10 +392,11 @@ const PlayfairCipherVisualization = () => {
           <button
             onClick={handleStepBackward}
             disabled={currentStep === 0}
-            className={`p-2 rounded-lg transition-colors flex items-center space-x-2
-              ${currentStep === 0 
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+            className={`p-2 rounded-lg transition-all flex items-center space-x-2 ${
+              currentStep === 0 
+                ? 'bg-gray-200 text-gray-400' 
+                : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600'
+            }`}
           >
             <BackwardIcon />
           </button>
@@ -401,29 +404,30 @@ const PlayfairCipherVisualization = () => {
           <button
             onClick={handleStepForward}
             disabled={currentStep === steps.length - 1}
-            className={`p-2 rounded-lg transition-colors flex items-center space-x-2
-              ${currentStep === steps.length - 1 
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+            className={`p-2 rounded-lg transition-all flex items-center space-x-2 ${
+              currentStep === steps.length - 1 
+                ? 'bg-gray-200 text-gray-400' 
+                : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600'
+            }`}
           >
             <ForwardIcon />
           </button>
         </div>
 
         {/* Visualization section */}
-        <div className="bg-white/50 p-6 rounded-xl">
-          <h3 className="text-lg font-semibold mb-4 text-blue-800">Encryption Process</h3>
+        <div className="bg-white/80 p-6 rounded-xl border border-violet-200">
+          <h3 className="text-lg font-semibold mb-4 text-violet-700">Encryption Process</h3>
           <div className="flex flex-col space-y-6">
             {/* Original Pairs */}
             <div>
-              <p className="text-sm text-blue-600 mb-2 text-center">Original Pairs</p>
-              <div className="min-h-[100px] bg-blue-50/50 rounded-lg p-4">
+              <p className="text-sm text-violet-600 mb-2 text-center">Original Pairs</p>
+              <div className="min-h-[100px] bg-violet-50/50 rounded-lg p-4">
                 <div className="flex flex-wrap gap-2 justify-center">
                 {steps.map((step, index) => (
                     <motion.div
                       key={`original-${index}`}
                       className={`w-8 h-8 flex items-center justify-center rounded 
-                        ${index === currentStep ? 'bg-blue-500 text-white' : 'bg-blue-50'}`}
+                        ${index === currentStep ? 'bg-violet-500 text-white' : 'bg-violet-50'}`}
                     >
                       {index <= currentStep ? step.original : step.original} {/* Updated logic */}
                     </motion.div>
@@ -434,11 +438,11 @@ const PlayfairCipherVisualization = () => {
 
             {/* Current Rule */}
             <div>
-              <p className="text-sm text-blue-600 mb-2 text-center">Current Rule</p>
-              <div className="min-h-[50px] bg-purple-50/50 rounded-lg p-4 flex justify-center">
+              <p className="text-sm text-violet-600 mb-2 text-center">Current Rule</p>
+              <div className="min-h-[50px] bg-indigo-50/50 rounded-lg p-4 flex justify-center">
                 <motion.div
                   className="h-8 px-4 flex items-center justify-center rounded 
-                    bg-white text-purple-800 font-medium text-sm"
+                    bg-white text-indigo-800 font-medium text-sm"
                 >
                   {currentStep < steps.length ? steps[currentStep].rule : '...'}
                 </motion.div>
@@ -447,14 +451,14 @@ const PlayfairCipherVisualization = () => {
 
             {/* Encrypted Pairs */}
             <div>
-              <p className="text-sm text-blue-600 mb-2 text-center">Encrypted Pairs</p>
-              <div className="min-h-[100px] bg-green-50/50 rounded-lg p-4">
+              <p className="text-sm text-violet-600 mb-2 text-center">Encrypted Pairs</p>
+              <div className="min-h-[100px] bg-violet-50/50 rounded-lg p-4">
                 <div className="flex flex-wrap gap-2 justify-center">
                   {steps.map((step, index) => (
                     <motion.div
                       key={`encrypted-${index}`}
                       className={`w-8 h-8 flex items-center justify-center rounded 
-                        ${index === currentStep ? 'bg-green-500 text-white' : 'bg-white'}`}
+                        ${index === currentStep ? 'bg-violet-500 text-white' : 'bg-white'}`}
                     >
                       {index <= currentStep ? step.encrypted : '??'}
                     </motion.div>

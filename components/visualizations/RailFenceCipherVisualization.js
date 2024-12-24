@@ -23,10 +23,12 @@ const splitEvenOdd = (text) => {
 // Child Components
 const VisualizationHeader = ({ onClose }) => (
   <div className="flex justify-between items-center mb-6">
-    <h2 className="text-2xl font-bold text-blue-800">Rail Fence Cipher Visualization</h2>
+    <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 text-transparent bg-clip-text">
+      Rail Fence Cipher Visualization
+    </h2>
     <button
       onClick={onClose}
-      className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
+      className="p-2 text-violet-600 hover:text-violet-800 transition-colors"
       aria-label="Close visualization"
     >
       <CloseIcon />
@@ -47,64 +49,66 @@ const Controls = ({
     <button
       onClick={onStepBackward}
       disabled={!canStepBackward}
-      className={`p-2 rounded-lg transition-colors ${
-        !canStepBackward ? 'bg-gray-300 text-gray-500' : 'bg-blue-500 text-white hover:bg-blue-600'
+      className={`p-2 rounded-lg transition-all flex items-center space-x-2 ${
+        !canStepBackward 
+          ? 'bg-gray-200 text-gray-400' 
+          : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600'
       }`}
     >
       <BackwardIcon />
     </button>
     <button
       onClick={onPlayPause}
-      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+      className="px-6 py-2 bg-gradient-to-r from-violet-500 to-indigo-500 text-white rounded-lg 
+        hover:from-violet-600 hover:to-indigo-600 transition-all flex items-center space-x-2"
     >
-      {isPlaying ? <PauseIcon /> : <PlayIcon />}
+      {isPlaying ? (
+        <>
+          <PauseIcon /> <span>Pause</span>
+        </>
+      ) : (
+        <>
+          <PlayIcon /> <span>Play</span>
+        </>
+      )}
     </button>
     <button
       onClick={onStepForward}
       disabled={!canStepForward}
-      className={`p-2 rounded-lg transition-colors ${
-        !canStepForward ? 'bg-gray-300 text-gray-500' : 'bg-blue-500 text-white hover:bg-blue-600'
+      className={`p-2 rounded-lg transition-all flex items-center space-x-2 ${
+        !canStepForward 
+          ? 'bg-gray-200 text-gray-400' 
+          : 'bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600'
       }`}
     >
       <ForwardIcon />
     </button>
     <button
       onClick={onReset}
-      className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+      className="px-6 py-2 bg-gradient-to-r from-violet-500 to-indigo-500 text-white rounded-lg 
+        hover:from-violet-600 hover:to-indigo-600 transition-all flex items-center space-x-2"
     >
-      <ResetIcon />
+      <ResetIcon /> <span>Reset</span>
     </button>
   </div>
 );
 
 const InputSection = ({ text }) => (
-  <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
-    <div className="mb-6">
-      <h3 className="text-xl font-semibold text-blue-800 mb-2">Input</h3>
-      <div className="grid grid-cols-1 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Plaintext</label>
-          <div className="p-4 bg-white rounded-lg border border-blue-200 min-h-[50px] font-mono">
-            {text}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="text-sm text-gray-600">
-      <p className="mb-2">Rail Fence Cipher Process:</p>
-      <ol className="list-decimal list-inside space-y-1 pl-4">
-        <li>Take the complete plaintext input</li>
-        <li>Separate letters into even and odd positions</li>
-        <li>Combine even-positioned letters followed by odd-positioned letters</li>
-      </ol>
+  <div className="bg-white/80 p-6 rounded-xl border border-violet-200">
+    <h3 className="text-lg font-semibold mb-4 text-violet-700">Input</h3>
+    <div>
+      <p className="text-sm text-violet-600 mb-2">Plaintext:</p>
+      <p className="font-mono bg-white/90 p-2 rounded border border-violet-200 break-all whitespace-pre-wrap min-h-[40px]">
+        {text}
+      </p>
     </div>
   </div>
 );
 
 const InputTextDisplay = ({ text }) => (
   <div className="mb-8">
-    <h3 className="text-lg font-semibold text-blue-800 mb-4">Step 1: Original Text</h3>
-    <div className="flex flex-wrap gap-2 p-4 bg-blue-50 rounded-lg">
+    <h3 className="text-lg font-semibold text-violet-700 mb-4">Step 1: Original Text</h3>
+    <div className="flex flex-wrap gap-2 p-4 bg-violet-50 rounded-lg">
       {text.split('').map((char, idx) => (
         <motion.div
           key={idx}
@@ -137,10 +141,10 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
 
   return (
     <div className="mb-8">
-      <h3 className="text-lg font-semibold text-blue-800 mb-4">Step 2: Separating Even and Odd Positions</h3>
+      <h3 className="text-lg font-semibold text-violet-700 mb-4">Step 2: Separating Even and Odd Positions</h3>
       <div className="space-y-24">
         <div>
-          <p className="text-sm text-gray-600 mb-16">Original positions:</p>
+          <p className="text-sm text-violet-600 mb-16">Original positions:</p>
           <div className="flex flex-wrap gap-y-16 gap-x-2 relative">
             {text.split('').map((char, idx) => {
               const row = Math.floor(idx / Math.floor((window.innerWidth - 64) / 40));
@@ -167,7 +171,7 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
           <div className="grid grid-cols-2 gap-8">
             {/* Even positions - First line */}
             <div className="space-y-8">
-              <p className="text-sm text-gray-600">Even positions:</p>
+              <p className="text-sm text-violet-600">Even positions:</p>
               <div className="flex flex-wrap gap-2">
                 {text.split('').map((char, idx) => {
                   if (idx % 2 !== 0) return null;
@@ -177,7 +181,7 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: idx * 0.1 }}
-                      className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded shadow"
+                      className="w-8 h-8 flex items-center justify-center bg-violet-100 rounded shadow"
                     >
                       {char}
                     </motion.div>
@@ -188,7 +192,7 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
 
             {/* Odd positions - Second line */}
             <div className="space-y-8">
-              <p className="text-sm text-gray-600">Odd positions:</p>
+              <p className="text-sm text-violet-600">Odd positions:</p>
               <div className="flex flex-wrap gap-2">
                 {text.split('').map((char, idx) => {
                   if (idx % 2 !== 1) return null;
@@ -198,7 +202,7 @@ const SeparationDisplay = ({ text, evenChars, oddChars }) => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: idx * 0.1 }}
-                      className="w-8 h-8 flex items-center justify-center bg-purple-100 rounded shadow"
+                      className="w-8 h-8 flex items-center justify-center bg-indigo-100 rounded shadow"
                     >
                       {char}
                     </motion.div>
@@ -228,8 +232,8 @@ const ResultDisplay = ({ evenChars, oddChars }) => {
 
   return (
     <div className="mb-8">
-      <h3 className="text-lg font-semibold text-blue-800 mb-4">Step 3: Combining Odd and Even Positions</h3>
-      <div className="relative min-h-[160px] bg-green-50 rounded-lg p-4 overflow-hidden">
+      <h3 className="text-lg font-semibold text-violet-700 mb-4">Step 3: Combining Odd and Even Positions</h3>
+      <div className="relative min-h-[160px] bg-violet-50 rounded-lg p-4 overflow-hidden">
         <div className="absolute w-full">
           {animationState === 'separate' ? (
             <div className="flex flex-col gap-6">
@@ -241,7 +245,7 @@ const ResultDisplay = ({ evenChars, oddChars }) => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
-                    className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded shadow"
+                    className="w-8 h-8 flex items-center justify-center bg-violet-100 rounded shadow"
                   >
                     {char}
                   </motion.div>
@@ -256,7 +260,7 @@ const ResultDisplay = ({ evenChars, oddChars }) => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
-                    className="w-8 h-8 flex items-center justify-center bg-purple-100 rounded shadow"
+                    className="w-8 h-8 flex items-center justify-center bg-indigo-100 rounded shadow"
                   >
                     {char}
                   </motion.div>
@@ -286,7 +290,7 @@ const ResultDisplay = ({ evenChars, oddChars }) => {
                     delay: idx * 0.05 
                   }}
                   className={`w-8 h-8 flex items-center justify-center rounded shadow ${
-                    idx < evenChars.length ? 'bg-blue-100' : 'bg-purple-100'
+                    idx < evenChars.length ? 'bg-violet-100' : 'bg-indigo-100'
                   }`}
                 >
                   {char}
@@ -296,7 +300,7 @@ const ResultDisplay = ({ evenChars, oddChars }) => {
           )}
         </div>
       </div>
-      <div className="mt-4 text-sm text-gray-600">
+      <div className="mt-4 text-sm text-violet-600">
         <p className="text-center">
           {animationState === 'separate' ? 'Showing odd and even position strings separately...' : 'Combined into final ciphertext'}
         </p>
@@ -356,7 +360,7 @@ const RailFenceCipherVisualization = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 min-h-[800px]">
+    <div className="bg-gradient-to-br from-violet-50/90 via-indigo-50/90 to-blue-50/90 rounded-xl shadow-lg p-6 max-w-4xl mx-auto border border-violet-200">
       <VisualizationHeader onClose={handleClose} />
       
       <InputSection text={text} />
