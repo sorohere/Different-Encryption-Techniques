@@ -160,7 +160,7 @@ const EncryptionForm = () => {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="glass-morphism w-full p-6 sm:p-8 rounded-2xl relative"
+          className="glass-morphism w-[500px] p-6 sm:p-8 rounded-2xl relative"
         >
           <motion.h2 
             initial={{ scale: 0.9 }}
