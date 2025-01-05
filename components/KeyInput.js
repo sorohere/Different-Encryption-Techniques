@@ -6,6 +6,10 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
   const handleIntegerInput = (e, keyName) => {
     const value = e.target.value;
     if (value === '' || /^[0-9]+$/.test(value)) {
+      if (cipher === 'keylessTransformation' && parseInt(value) > 10) {
+        toast.error('Please enter number of columns <= 10');
+        return;
+      }
       setKeys({ ...keys, [keyName]: value });
     } else {
       toast.error('Please enter numbers only');
@@ -83,6 +87,10 @@ const KeyInput = ({ cipher, keys, setKeys }) => {
               const value = e.target.value;
               if (value === '' || /^[0-9]+$/.test(value)) {
                 const size = value === '' ? '' : parseInt(value);
+                if (size > 6) {
+                  toast.error('Please enter matrix size less than or equal to 6');
+                  return;
+                }
                 setKeys({
                   matrixSize: value,
                   key1: size ? JSON.stringify(createEmptyMatrix(size)) : ''
