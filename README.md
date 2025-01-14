@@ -33,17 +33,19 @@ A **modern web application** that allows users to **encrypt messages** using var
    cd Encryption-Wizard
    ```
 
-3. Install dependencies 📦:
+3. **Build the Docker image** 🐳:
    ```bash
-   npm install
+   docker build -t encryption-techniques .
    ```
 
-4. Run the development server 🏃‍♂️:
+4. **Run the Docker container** 🏃‍♂️:
    ```bash
-   npm run dev
+   docker run -p 3000:3000 encryption-techniques
    ```
 
-5. Open your browser 🌐 and visit `http://localhost:3000` 🖱️ 
+5. Open your browser 🌐 and visit `http://localhost:3000` 🖱️
+
+---
 
 ## 🎯 Usage 🛠️
 
@@ -53,3 +55,4 @@ A **modern web application** that allows users to **encrypt messages** using var
 4. **Encrypt**: Click the "Encrypt Message" button to generate the ciphertext
 5. **Visualize**: Click the "Visualize" button to see how the encryption works
 6. **Copy**: Use the copy button to copy the encrypted message to your clipboard
+
