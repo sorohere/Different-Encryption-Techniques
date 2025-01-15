@@ -1,12 +1,11 @@
-# 🛡️✨ Encryption Wizard 🔐
+# Encryption Wizard
 
-A **modern web application** that allows users to **encrypt messages** using various classical cryptographic algorithms with **real-time visualization** of the encryption process. 🕵️‍♂️📜
+A **modern web application** that allows users to **encrypt messages** using various classical cryptographic algorithms with **real-time visualization** of the encryption process.
 
----
 
-## ✨ **Features** 🚀
+## **Features** 
 
-- **🔢 Multiple Encryption Methods**: Support for **9 different classical encryption techniques**:
+- **Multiple Encryption Methods**: Support for **9 different classical encryption techniques**:
   - ➕ **Additive Cipher**
   - ✖️ **Multiplicative Cipher**
   - 🧮 **Affine Cipher**
@@ -17,37 +16,24 @@ A **modern web application** that allows users to **encrypt messages** using var
   - 🛤️ **Rail Fence Cipher**
   - 🔄 **Keyless Transformation Cipher**
 
-- **📊 Real-time Visualization**: Watch your **plaintext** transform into **ciphertext** with **step-by-step visual explanations**! ✨👀
+- **Real-time Visualization**: Watch your **plaintext** transform into **ciphertext** with **step-by-step visual explanations**!
 
----
 
-## 💻 **Installation** ⚙️
 
-1. **Clone the repository** 🖥️:
-   ```bash
-   git clone https://github.com/NitinParamkar/Encryption-Wizard.git
-   ```
+##  **Installation**
 
-2. **Navigate to the project directory** 📂:
-   ```bash
-   cd Encryption-Wizard
-   ```
+1. **Clone the repository**: ```git clone https://github.com/NitinParamkar/Encryption-Wizard.git```
 
-3. **Build the Docker image** 🐳:
-   ```bash
-   docker build -t encryption-techniques .
-   ```
+2. **Navigate to the project directory**: ```cd Encryption-Wizard```
 
-4. **Run the Docker container** 🏃‍♂️:
-   ```bash
-   docker run -p 3000:3000 encryption-techniques
-   ```
+3. **Build the Docker image**: ```docker build -t encryption-techniques .```
 
-5. Open your browser 🌐 and visit `http://localhost:3000` 🖱️
+4. **Run the Docker container**: ```docker run -p 3000:3000 encryption-techniques```
 
----
+5. Open your browser and visit `http://localhost:3000`
 
-## 🎯 Usage 🛠️
+
+## Usage
 
 1. **Select Encryption Method**: Choose from 9 different encryption algorithms
 2. **Enter Message**: Type or paste your plaintext message
